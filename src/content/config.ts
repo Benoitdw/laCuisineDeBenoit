@@ -22,6 +22,12 @@ const recettes = defineCollection({
       variante: z.boolean().default(false),
     })),
     etapes: z.array(z.string()),
+    changelog: z.array(z.object({
+      date: z.date(),
+      note: z.string(),
+    })).optional(),
+    archive_de: z.string().optional(),
+    archive_note: z.string().optional(),
   }),
 });
 
