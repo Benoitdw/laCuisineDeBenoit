@@ -1,0 +1,22 @@
+---
+interface Props {
+  size?: number;
+  variant?: 'light' | 'dark'; // light = couleurs sombres (sur fond clair), dark = couleurs claires (sur fond sombre)
+}
+const { size = 30, variant = 'dark' } = Astro.props;
+const pan = variant === 'dark' ? '#E8D0BB' : '#2D4228';
+---
+
+<svg width={size} height={size} viewBox="0 0 56 56" fill="none" aria-hidden="true">
+  <!-- Flammes -->
+  <path d="M18 40 C14 46 15 53 18 56 C21 53 22 46 18 40Z" fill="#AD6B35" opacity={variant === 'dark' ? '.7' : '.6'}/>
+  <path d="M28 38 C23 45 24 53 28 56 C32 53 33 45 28 38Z" fill="#AD6B35"/>
+  <path d="M38 40 C34 46 35 53 38 56 C41 53 42 46 38 40Z" fill="#AD6B35" opacity={variant === 'dark' ? '.7' : '.6'}/>
+  <!-- Poêlon -->
+  <line x1="12" y1="40" x2="44" y2="40" stroke={pan} stroke-width="3" stroke-linecap="round"/>
+  <line x1="12" y1="40" x2="9" y2="22" stroke={pan} stroke-width="2" stroke-linecap="round"/>
+  <line x1="44" y1="40" x2="47" y2="22" stroke={pan} stroke-width="2" stroke-linecap="round"/>
+  <line x1="8" y1="22" x2="47" y2="22" stroke={pan} stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Manche -->
+  <path d="M47 21 L47 27 L57 25 Q59 24 59 23 Q59 22 57 21 Z" fill={pan}/>
+</svg>

@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper:     #F5EDD8;
+  --card:      #FBF7EE;
+  --ink:       #1C160E;
+  --forest:    #2D4228;
+  --fern:      #5B7A53;
+  --fern-lt:   #C8D9C3;
+  --copper:    #AD6B35;
+  --copper-lt: #E8D0BB;
+  --muted:     #7A6D5C;
+  --rule:      rgba(28, 22, 14, .13);
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Lora', Georgia, serif;
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+/* Tailwind Typography overrides for Gravure */
+.prose {
+  --tw-prose-body:        var(--muted);
+  --tw-prose-headings:    var(--forest);
+  --tw-prose-bold:        var(--ink);
+  --tw-prose-links:       var(--copper);
+  --tw-prose-hr:          var(--rule);
+  --tw-prose-bullets:     var(--fern);
+  --tw-prose-counters:    var(--copper);
+  font-family: 'Lora', Georgia, serif;
+}
+.prose h2 {
+  font-style: italic;
+  font-weight: 400;
+}

@@ -1,0 +1,20 @@
+---
+import { getCollection, render } from 'astro:content';
+import RecetteLayout from '../../layouts/RecetteLayout.astro';
+
+export async function getStaticPaths() {
+  const recettes = await getCollection('recettes');
+  return recettes.map(recette => ({
+    // Strip .md extension from id for clean URLs
+    params: { slug: recette.id.replace(/\.md$/, '') },
+    props: { recette },
+  }));
+}
+
+const { recette } = Astro.props;
+const { Content } = await render(recette);
+---
+
+<RecetteLayout recette={recette}>
+  <Content />
+</RecetteLayout>

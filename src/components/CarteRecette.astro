@@ -1,0 +1,77 @@
+---
+interface Props {
+  slug: string;
+  title: string;
+  description: string;
+  image?: string;
+  tags: string[];
+  difficulte: 'facile' | 'moyen' | 'difficile';
+  temps_prep: number;
+  temps_cuisson: number;
+  vegetarien: boolean;
+  vegan: boolean;
+  base?: string;
+}
+
+const {
+  slug,
+  title,
+  description,
+  image,
+  tags,
+  difficulte,
+  temps_prep,
+  temps_cuisson,
+  vegetarien,
+  vegan,
+  base = '',
+} = Astro.props;
+
+const tempsTotal = temps_prep + temps_cuisson;
+const difficulteColor = {
+  facile: 'text-green-600 bg-green-50',
+  moyen: 'text-orange-600 bg-orange-50',
+  difficile: 'text-red-600 bg-red-50',
+};
+---
+
+<a
+  href={`${base}/recettes/${slug}`}
+  class="group block bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden"
+>
+  {image ? (
+    <div class="aspect-video bg-gray-100 overflow-hidden">
+      <img
+        src={image}
+        alt={title}
+        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+        loading="lazy"
+      />
+    </div>
+  ) : (
+    <div class="aspect-video bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center text-5xl">
+      🍽️
+    </div>
+  )}
+  <div class="p-4">
+    <h3 class="font-semibold text-gray-900 group-hover:text-amber-700 transition-colors mb-1 line-clamp-2">
+      {title}
+    </h3>
+    <p class="text-sm text-gray-500 line-clamp-2 mb-3">{description}</p>
+    <div class="flex items-center gap-3 text-xs">
+      <span class="text-gray-500">⏱ {tempsTotal} min</span>
+      <span class={`capitalize px-2 py-0.5 rounded-full ${difficulteColor[difficulte]}`}>
+        {difficulte}
+      </span>
+      {vegan && <span title="Vegan">🌱</span>}
+      {!vegan && vegetarien && <span title="Végétarien">🌿</span>}
+    </div>
+    {tags.length > 0 && (
+      <div class="flex flex-wrap gap-1 mt-2">
+        {tags.slice(0, 3).map(tag => (
+          <span class="px-2 py-0.5 bg-amber-50 text-amber-700 rounded-full text-xs">{tag}</span>
+        ))}
+      </div>
+    )}
+  </div>
+</a>

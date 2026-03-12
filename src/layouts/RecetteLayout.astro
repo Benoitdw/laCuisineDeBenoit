@@ -1,0 +1,376 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import CalculateurPortions from '../components/CalculateurPortions.svelte';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  recette: CollectionEntry<'recettes'>;
+}
+
+const { recette } = Astro.props;
+const { data } = recette;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const tempsTotal = data.temps_prep + data.temps_cuisson;
+
+const diffBadge: Record<string, string> = {
+  facile:    'badge-facile',
+  moyen:     'badge-moyen',
+  difficile: 'badge-difficile',
+};
+
+function toRoman(n: number): string {
+  const vals = [1000,900,500,400,100,90,50,40,10,9,5,4,1];
+  const syms = ['M','CM','D','CD','C','XC','L','XL','X','IX','V','IV','I'];
+  let r = '';
+  for (let i = 0; i < vals.length; i++) {
+    while (n >= vals[i]) { r += syms[i]; n -= vals[i]; }
+  }
+  return r;
+}
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Recipe',
+  name: data.title,
+  description: data.description,
+  image: data.image ? new URL(`${base}${data.image}`, import.meta.env.SITE) : undefined,
+  datePublished: data.date.toISOString(),
+  prepTime: `PT${data.temps_prep}M`,
+  cookTime: `PT${data.temps_cuisson}M`,
+  totalTime: `PT${tempsTotal}M`,
+  recipeYield: `${data.portions_base} portions`,
+  recipeCategory: data.categories[0],
+  keywords: data.tags.join(', '),
+  recipeIngredient: data.ingredients.map(i => `${i.quantite} ${i.unite} ${i.nom}`.trim()),
+  recipeInstructions: data.etapes.map((etape, i) => ({
+    '@type': 'HowToStep',
+    position: i + 1,
+    text: etape,
+  })),
+};
+---
+
+<BaseLayout title={data.title} description={data.description} image={data.image} type="article">
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-ornament" aria-hidden="true">
+      <svg width="180" height="230" viewBox="0 0 160 200" fill="none">
+        <path d="M80 190 C80 150,78 110,82 70 C84 50,80 30,80 10" stroke="#F5EDD8" stroke-width="1.5" fill="none"/>
+        <path d="M80 160 C60 145,45 148,40 140 C55 135,72 142,80 160Z" fill="#F5EDD8" opacity=".6"/>
+        <path d="M80 130 C58 112,42 115,36 105 C52 100,70 110,80 130Z" fill="#F5EDD8" opacity=".5"/>
+        <path d="M80 100 C62 82,48 82,44 70 C58 68,72 80,80 100Z" fill="#F5EDD8" opacity=".4"/>
+        <path d="M80 145 C100 130,115 133,120 125 C105 120,88 128,80 145Z" fill="#F5EDD8" opacity=".55"/>
+        <path d="M80 115 C102 97,118 98,124 88 C108 84,90 94,80 115Z" fill="#F5EDD8" opacity=".45"/>
+        <path d="M80 85 C100 68,114 66,118 55 C104 52,88 62,80 85Z" fill="#F5EDD8" opacity=".35"/>
+        <circle cx="80" cy="12" r="3" fill="#F5EDD8" opacity=".4"/>
+      </svg>
+    </div>
+    <div class="hero-inner">
+      <nav class="breadcrumb print:hidden" aria-label="Fil d'Ariane">
+        <a href={`${base}/`}>Accueil</a>
+        <span class="sep">/</span>
+        <span>{data.title}</span>
+      </nav>
+      <div class="title-rule"></div>
+      <h1>{data.title}</h1>
+      <p class="description">{data.description}</p>
+      <div class="meta">
+        <span class={`badge ${diffBadge[data.difficulte]}`}>{data.difficulte.charAt(0).toUpperCase() + data.difficulte.slice(1)}</span>
+        <span class="badge badge-time">⏱ {data.temps_prep} min</span>
+        <span class="badge badge-time">🔥 {data.temps_cuisson} min</span>
+        <span class="badge badge-time">👥 {data.portions_base} portions</span>
+        {data.vegan && <span class="badge badge-diet">🌱 Vegan</span>}
+        {!data.vegan && data.vegetarien && <span class="badge badge-diet">🌿 Végétarien</span>}
+      </div>
+      <div class="tags">
+        {data.tags.map(tag => (
+          <a href={`${base}/?tags=${tag}`} class="tag">{tag}</a>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <!-- PHOTO (optionnelle) -->
+  {data.image && (
+    <div class="recipe-photo">
+      <img src={`${base}${data.image}`} alt={data.title} />
+    </div>
+  )}
+
+  <!-- BODY: 2 colonnes -->
+  <div class="body">
+
+    <!-- SIDEBAR INGRÉDIENTS -->
+    <aside class="sidebar">
+      <h2 class="section-heading">Ingrédients</h2>
+      <CalculateurPortions
+        client:load
+        portionsBase={data.portions_base}
+        ingredients={data.ingredients}
+      />
+    </aside>
+
+    <!-- ÉTAPES -->
+    <main class="steps-col">
+      <h2 class="section-heading">Préparation</h2>
+      <p class="steps-hint print:hidden">Cliquer sur une étape pour la biffer.</p>
+      <ol class="steps-list">
+        {data.etapes.map((etape, i) => (
+          <li>
+            <span class="step-n">{toRoman(i + 1)}</span>
+            <span class="step-text">{etape}</span>
+          </li>
+        ))}
+      </ol>
+    </main>
+
+  </div>
+
+  <!-- SÉPARATEUR BOTANIQUE -->
+  <div class="ornament" aria-hidden="true">
+    <div class="ornament-line"></div>
+    <svg width="48" height="32" viewBox="0 0 48 32" fill="none" opacity=".3">
+      <path d="M24 30 C24 22,23 14,24 4" stroke="#2D4228" stroke-width="1" fill="none"/>
+      <path d="M24 22 C18 18,13 19,11 15 C16 13,21 16,24 22Z" fill="#2D4228"/>
+      <path d="M24 14 C30 10,35 11,37 7 C32 5,27 8,24 14Z" fill="#2D4228"/>
+      <path d="M24 22 C30 18,35 19,37 15 C32 13,27 16,24 22Z" fill="#2D4228"/>
+      <path d="M24 14 C18 10,13 11,11 7 C16 5,21 8,24 14Z" fill="#2D4228"/>
+    </svg>
+    <div class="ornament-line"></div>
+  </div>
+
+  <!-- CONTENU MARKDOWN (notes, variantes, accords) -->
+  <div class="prose-wrapper">
+    <div class="prose prose-stone max-w-none">
+      <slot />
+    </div>
+  </div>
+
+  <!-- GISCUS COMMENTAIRES -->
+  <div class="comments print:hidden">
+    <h2 class="section-heading">Commentaires</h2>
+    <!--
+      Configurer Giscus sur https://giscus.app après activation de GitHub Discussions.
+      Remplacer data-repo, data-repo-id, data-category-id ci-dessous.
+    -->
+    <script
+      src="https://giscus.app/client.js"
+      data-repo="VOTRE_USERNAME/cuisineDeBen"
+      data-repo-id="VOTRE_REPO_ID"
+      data-category="Announcements"
+      data-category-id="VOTRE_CATEGORY_ID"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="bottom"
+      data-theme="light"
+      data-lang="fr"
+      crossorigin="anonymous"
+      async
+    ></script>
+  </div>
+
+</BaseLayout>
+
+<!-- Biffer interaction -->
+<script>
+  document.querySelectorAll('.steps-list li').forEach(li => {
+    li.addEventListener('click', () => li.classList.toggle('done'));
+  });
+</script>
+
+<style>
+  /* HERO */
+  .hero {
+    background: var(--forest);
+    padding: 2.5rem 2rem 2rem;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 3px solid var(--copper);
+  }
+  .hero-ornament {
+    position: absolute;
+    right: 2rem; top: 1rem;
+    opacity: .08;
+    pointer-events: none;
+  }
+  .hero-inner {
+    max-width: 820px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .breadcrumb {
+    font-size: .72rem;
+    color: rgba(255,255,255,.4);
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+  }
+  .breadcrumb a { color: rgba(255,255,255,.4); text-decoration: none; }
+  .breadcrumb a:hover { color: rgba(255,255,255,.7); }
+  .breadcrumb .sep { margin: 0 .5rem; }
+  .title-rule { width: 40px; height: 2px; background: var(--copper); margin-bottom: .9rem; }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 700;
+    color: var(--paper);
+    line-height: 1.15;
+    margin-bottom: .7rem;
+  }
+  .description {
+    font-style: italic;
+    color: rgba(245,237,216,.6);
+    font-size: 1rem;
+    max-width: 480px;
+    margin-bottom: 1.5rem;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-bottom: .75rem;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: .2rem .65rem;
+    border-radius: 2px;
+    font-size: .75rem;
+    font-family: 'Lora', serif;
+    letter-spacing: .02em;
+    border: 1px solid;
+  }
+  .badge-facile   { background: rgba(91,122,83,.25); color: var(--fern-lt); border-color: rgba(91,122,83,.4); }
+  .badge-moyen    { background: rgba(173,107,53,.2);  color: var(--copper-lt); border-color: rgba(173,107,53,.4); }
+  .badge-difficile{ background: rgba(150,50,50,.2);   color: #F5C0C0; border-color: rgba(150,50,50,.4); }
+  .badge-time     { background: transparent; color: rgba(245,237,216,.5); border-color: rgba(245,237,216,.2); }
+  .badge-diet     { background: rgba(91,122,83,.25); color: var(--fern-lt); border-color: rgba(91,122,83,.4); }
+  .tags { display: flex; flex-wrap: wrap; gap: .35rem; }
+  .tag {
+    font-size: .7rem;
+    color: rgba(200,217,195,.7);
+    background: rgba(91,122,83,.15);
+    border: 1px solid rgba(91,122,83,.3);
+    padding: .1rem .5rem;
+    border-radius: 2px;
+    letter-spacing: .04em;
+    text-decoration: none;
+  }
+  .tag:hover { background: rgba(91,122,83,.3); }
+
+  /* PHOTO */
+  .recipe-photo {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 2rem 2rem 0;
+  }
+  .recipe-photo img {
+    width: 100%;
+    display: block;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(28,22,14,.12), 0 4px 16px rgba(28,22,14,.08);
+  }
+
+  /* BODY 2-COL */
+  .body {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem;
+    display: grid;
+    grid-template-columns: 255px 1fr;
+    gap: 0;
+    align-items: start;
+  }
+  @media (max-width: 660px) {
+    .body {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .sidebar { border-right: none; border-bottom: 1px solid var(--rule); padding-right: 0; padding-bottom: 2rem; }
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    position: sticky;
+    top: 1.5rem;
+    padding-right: 2rem;
+    border-right: 1px solid var(--rule);
+  }
+  .section-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: .78rem;
+    font-weight: 600;
+    color: var(--forest);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    margin-bottom: 1rem;
+    padding-bottom: .35rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* STEPS */
+  .steps-col { padding-left: 2rem; }
+  .steps-hint { font-size: .73rem; color: var(--muted); font-style: italic; margin-bottom: .9rem; }
+  .steps-list { list-style: none; padding: 0; margin: 0; }
+  .steps-list li {
+    display: flex;
+    gap: 1rem;
+    padding: .65rem 0;
+    border-bottom: 1px solid rgba(28,22,14,.07);
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background .1s;
+  }
+  .steps-list li:hover { background: rgba(91,122,83,.06); padding-left: .3rem; }
+  .steps-list li.done .step-text {
+    text-decoration: line-through;
+    text-decoration-thickness: 1.5px;
+    text-decoration-color: var(--muted);
+    color: var(--muted);
+  }
+  .steps-list li.done .step-n { color: var(--muted); }
+  .step-n {
+    flex-shrink: 0;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--copper);
+    min-width: 2rem;
+    text-align: right;
+    margin-top: .1rem;
+    transition: color .15s;
+  }
+  .step-text { font-size: .92rem; line-height: 1.65; }
+
+  /* ORNAMENT */
+  .ornament {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: .5rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+  }
+  .ornament-line { flex: 1; height: 1px; background: var(--rule); }
+
+  /* PROSE */
+  .prose-wrapper {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 1rem 2rem 2rem;
+  }
+
+  /* COMMENTS */
+  .comments {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 1rem 2rem 3rem;
+  }
+  .comments .section-heading { margin-bottom: 1.5rem; }
+</style>
