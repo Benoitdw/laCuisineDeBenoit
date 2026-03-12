@@ -16,12 +16,17 @@ const recettes = defineCollection({
     vegan: z.boolean().default(false),
     ingredients: z.array(z.object({
       nom: z.string(),
-      quantite: z.number(),
-      unite: z.string(),
+      quantite: z.number().optional(),
+      unite: z.string().optional(),
       note: z.string().optional(),
-      variante: z.boolean().default(false),
+      interchangeable: z.boolean().default(false),
     })),
     etapes: z.array(z.string()),
+    astuces: z.array(z.string()).optional(),
+    inspirations: z.array(z.object({
+      url: z.string(),
+      label: z.string().optional(),
+    })).optional(),
     changelog: z.array(z.object({
       date: z.date(),
       note: z.string(),

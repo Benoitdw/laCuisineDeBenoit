@@ -1,0 +1,24 @@
+---
+import { getCollection, render } from 'astro:content';
+import RecetteLayout from '../../../../layouts/RecetteLayout.astro';
+
+export async function getStaticPaths() {
+  const toutes = await getCollection('recettes');
+  const archives = toutes.filter(r => r.data.archive_de);
+  return archives.map(r => {
+    const dateFile = r.id.replace(/\.md$/, '').split('/').pop()!;
+    return {
+      params: { slug: r.data.archive_de!, date: dateFile },
+      props: { archive: r },
+    };
+  });
+}
+
+const { archive } = Astro.props;
+const { Content } = await render(archive);
+const slug = archive.data.archive_de!;
+---
+
+<RecetteLayout recette={archive} isArchive={true} archiveDe={slug} giscusTerm={slug}>
+  <Content />
+</RecetteLayout>

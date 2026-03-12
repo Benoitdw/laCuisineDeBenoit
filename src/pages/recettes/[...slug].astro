@@ -3,18 +3,23 @@ import { getCollection, render } from 'astro:content';
 import RecetteLayout from '../../layouts/RecetteLayout.astro';
 
 export async function getStaticPaths() {
-  const recettes = await getCollection('recettes');
-  return recettes.map(recette => ({
-    // Strip .md extension from id for clean URLs
-    params: { slug: recette.id.replace(/\.md$/, '') },
-    props: { recette },
-  }));
+  const toutes = await getCollection('recettes');
+  const courantes = toutes.filter(r => !r.data.archive_de);
+  return courantes.map(r => {
+    const slug = r.id.replace(/\/index\.md$/, '').replace(/\.md$/, '');
+    const archives = toutes.filter(a => a.data.archive_de === slug);
+    return {
+      params: { slug },
+      props: { recette: r, archives },
+    };
+  });
 }
 
-const { recette } = Astro.props;
+const { recette, archives } = Astro.props;
 const { Content } = await render(recette);
+const slug = recette.id.replace(/\/index\.md$/, '').replace(/\.md$/, '');
 ---
 
-<RecetteLayout recette={recette}>
+<RecetteLayout recette={recette} archives={archives} giscusTerm={slug}>
   <Content />
 </RecetteLayout>

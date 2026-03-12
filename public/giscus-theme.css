@@ -1,0 +1,110 @@
+/* -------------------------------------------------------
+   Thème Giscus — Gravure (La Cuisine de Benoît)
+   Chargé à l'intérieur de l'iframe Giscus
+------------------------------------------------------- */
+
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Playfair+Display:wght@600&display=swap');
+
+:root {
+  /* Canvas */
+  --color-canvas-default:        #FBF7EE;
+  --color-canvas-subtle:         #F5EDD8;
+  --color-canvas-inset:          #EDE5CE;
+
+  /* Borders */
+  --color-border-default:        rgba(28, 22, 14, .15);
+  --color-border-muted:          rgba(28, 22, 14, .08);
+
+  /* Text */
+  --color-fg-default:            #1C160E;
+  --color-fg-muted:              #7A6D5C;
+  --color-fg-subtle:             #9E9182;
+  --color-fg-on-emphasis:        #F5EDD8;
+
+  /* Accent (liens, focus) */
+  --color-accent-fg:             #AD6B35;
+  --color-accent-emphasis:       #AD6B35;
+  --color-accent-muted:          rgba(173, 107, 53, .2);
+  --color-accent-subtle:         rgba(173, 107, 53, .1);
+
+  /* Bouton primaire */
+  --color-btn-primary-bg:             #2D4228;
+  --color-btn-primary-text:           #F5EDD8;
+  --color-btn-primary-border:         #2D4228;
+  --color-btn-primary-hover-bg:       #5B7A53;
+  --color-btn-primary-hover-border:   #5B7A53;
+  --color-btn-primary-disabled-bg:    rgba(45, 66, 40, .4);
+
+  /* Bouton secondaire */
+  --color-btn-bg:                #F5EDD8;
+  --color-btn-text:              #1C160E;
+  --color-btn-border:            rgba(28, 22, 14, .2);
+  --color-btn-hover-bg:          #EDE5CE;
+  --color-btn-hover-border:      rgba(28, 22, 14, .3);
+  --color-btn-active-bg:         #E8D0BB;
+  --color-btn-counter-bg:        rgba(28, 22, 14, .07);
+
+  /* Réactions */
+  --color-reactions-btn-bg:             transparent;
+  --color-reactions-btn-hover-bg:       rgba(173, 107, 53, .1);
+  --color-reactions-btn-hover-border:   rgba(173, 107, 53, .3);
+
+  /* Divers */
+  --color-neutral-muted:         rgba(28, 22, 14, .08);
+  --color-header-bg:             #2D4228;
+  --color-header-text:           #F5EDD8;
+}
+
+/* Typographie */
+body,
+.comment-body,
+.timeline-comment {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #1C160E;
+}
+
+/* En-têtes dans les commentaires */
+.comment-body h1,
+.comment-body h2,
+.comment-body h3 {
+  font-family: 'Playfair Display', serif;
+  color: #2D4228;
+}
+
+/* Liens */
+a {
+  color: #AD6B35;
+  text-decoration-color: rgba(173, 107, 53, .35);
+}
+a:hover { color: #2D4228; }
+
+/* Textarea de rédaction */
+textarea {
+  font-family: 'Lora', Georgia, serif !important;
+  background: #FBF7EE !important;
+  border-color: rgba(28, 22, 14, .2) !important;
+  border-radius: 3px !important;
+}
+textarea:focus {
+  border-color: #AD6B35 !important;
+  box-shadow: 0 0 0 3px rgba(173, 107, 53, .15) !important;
+}
+
+/* Avatar */
+.avatar {
+  border-radius: 2px !important;
+}
+
+/* Compteur de commentaires */
+.gsc-comments-count {
+  font-family: 'Playfair Display', serif;
+  font-size: .8rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #7A6D5C;
+}
+
+/* Timeline */
+.gsc-timeline { gap: 1rem; }

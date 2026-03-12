@@ -2,20 +2,24 @@
   export let portionsBase: number = 4;
   export let ingredients: Array<{
     nom: string;
-    quantite: number;
-    unite: string;
+    quantite?: number;
+    unite?: string;
     note?: string;
-    variante?: boolean;
+    interchangeable?: boolean;
   }> = [];
 
   let portions = portionsBase;
   $: facteur = portions / portionsBase;
-  $: indispensables = ingredients.filter(i => !i.variante);
-  $: variantes = ingredients.filter(i => i.variante);
+  $: indispensables = ingredients.filter(i => !i.interchangeable);
+  $: interchangeables = ingredients.filter(i => i.interchangeable);
 
-  function fmt(q: number, unite: string): string {
+  function hasQty(q?: number): boolean {
+    return q !== undefined && q !== null && q !== 0;
+  }
+
+  function fmt(q: number, unite?: string): string {
     const v = q * facteur;
-    if (Number.isInteger(q) && unite === '') return String(Math.round(v));
+    if (Number.isInteger(q) && !unite) return String(Math.round(v));
     const r = parseFloat(v.toFixed(1));
     return Number.isInteger(r) ? String(r) : String(r);
   }
@@ -31,27 +35,33 @@
   {/if}
 </div>
 
+<div class="ing-sep">
+  <span class="ing-sep-label">Indispensables</span>
+</div>
+
 <ul class="ing-list">
   {#each indispensables as ing}
-    <li>
-      <span class="ing-qty">{fmt(ing.quantite, ing.unite)}</span>
-      <span class="ing-unit">{ing.unite}</span>
+    <li class:no-qty={!hasQty(ing.quantite)}>
+      {#if hasQty(ing.quantite)}
+        <span class="ing-qty">{fmt(ing.quantite!, ing.unite)}</span>
+        <span class="ing-unit">{ing.unite ?? ''}</span>
+      {/if}
       <span class="ing-name">{ing.nom}</span>
       {#if ing.note}<span class="ing-note">{ing.note}</span>{/if}
     </li>
   {/each}
 </ul>
 
-{#if variantes.length > 0}
-  <div class="var-sep">
-    <span class="var-label">Variantes</span>
+{#if interchangeables.length > 0}
+  <div class="ing-sep">
+    <span class="ing-sep-label">Interchangeables</span>
   </div>
-  <ul class="ing-list variantes">
-    {#each variantes as ing}
+  <ul class="ing-list interchangeables">
+    {#each interchangeables as ing}
       <li>
-        <span class="ing-qty">{fmt(ing.quantite, ing.unite)}</span>
-        <span class="ing-unit">{ing.unite}</span>
-        <span class="ing-name">{ing.nom}</span>
+        <span class="ing-qty">{hasQty(ing.quantite) ? fmt(ing.quantite!, ing.unite) : ''}</span>
+        <span class="ing-unit">{ing.unite ?? ''}</span>
+        <span class="ing-name"><span class="swap-icon" aria-hidden="true">⇄</span>{ing.nom}</span>
         {#if ing.note}<span class="ing-note">{ing.note}</span>{/if}
       </li>
     {/each}
@@ -105,6 +115,16 @@
     font-size: .87rem;
     align-items: baseline;
   }
+  .ing-list li.no-qty {
+    grid-template-columns: 1fr;
+  }
+  .ing-list li.no-qty .ing-name {
+    color: var(--muted);
+    font-style: italic;
+  }
+  .ing-list li.no-qty .ing-note {
+    grid-column: 1;
+  }
   .ing-qty {
     font-family: 'Playfair Display', serif;
     font-weight: 600;
@@ -126,20 +146,20 @@
     font-size: .73rem;
   }
 
-  .var-sep {
+  .ing-sep {
     margin: 1rem 0 .65rem;
     display: flex;
     align-items: center;
     gap: .5rem;
   }
-  .var-sep::before, .var-sep::after {
+  .ing-sep::before, .ing-sep::after {
     content: '';
     flex: 1;
     height: 1px;
     background: var(--fern);
     opacity: .25;
   }
-  .var-label {
+  .ing-sep-label {
     font-size: .67rem;
     color: var(--fern);
     letter-spacing: .12em;
@@ -149,6 +169,16 @@
     font-family: 'Lora', serif;
   }
 
-  .variantes .ing-qty { color: var(--muted); }
-  .variantes .ing-name { color: var(--muted); }
+  .interchangeables li {
+    background: rgba(173,107,53,.04);
+  }
+  .interchangeables .ing-qty { color: rgba(173,107,53,.6); }
+  .interchangeables .ing-name { color: rgba(173,107,53,.75); }
+
+  .swap-icon {
+    font-style: normal;
+    margin-right: .25rem;
+    font-size: .8rem;
+    opacity: .7;
+  }
 </style>
