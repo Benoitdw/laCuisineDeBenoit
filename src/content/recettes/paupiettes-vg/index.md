@@ -1,10 +1,10 @@
 ---
 title: "Paupiettes végétales"
-date: 2024-03-25
+date: 2026-03-12
 description: "Un vrai coup de coeur ! Simple, amusant, rapide et déliceux c'est une recette que j'ai adoré faire !"
 categories: ["plat principal"]
 tags: ["proteines", "alternative", "légumineuses", "daily"]
-difficulte: facile
+difficulte: moyen
 temps_prep: 20
 temps_cuisson: 30
 portions_base: 4

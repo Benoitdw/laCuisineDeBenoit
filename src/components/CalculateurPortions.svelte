@@ -115,15 +115,11 @@
     font-size: .87rem;
     align-items: baseline;
   }
-  .ing-list li.no-qty {
-    grid-template-columns: 1fr;
-  }
   .ing-list li.no-qty .ing-name {
-    color: var(--muted);
-    font-style: italic;
+    grid-column: 1 / -1;
   }
   .ing-list li.no-qty .ing-note {
-    grid-column: 1;
+    grid-column: 1 / -1;
   }
   .ing-qty {
     font-family: 'Playfair Display', serif;
