@@ -61,8 +61,27 @@ const isPain = pathname.startsWith(base + '/pain') || pathname.startsWith('/pain
         </a>
         <ul class="nav-links">
           <li><a href={`${base}/`} class:list={[{ active: isHome }]}>Accueil</a></li>
-          <li><a href={`${base}/recettes/`} class:list={[{ active: isRecettes }]}>Recettes</a></li>
-          <li><a href={`${base}/pain/`} class:list={[{ active: isPain }]}>Pain</a></li>
+          <li>
+            <a href={`${base}/recettes/`} class:list={[{ active: isRecettes }]}>
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" aria-hidden="true">
+                <path d="M6 5 Q5 8 6 11 Q8 15 9 13 Q11 9 10 5Z"/>
+                <path d="M8 5 C8 3 6 1 5 1"/>
+                <path d="M8 5 C8 2 9 1 10 0"/>
+                <path d="M8 5 C7 3 7 1 8 0"/>
+              </svg>
+              Recettes
+            </a>
+          </li>
+          <li>
+            <a href={`${base}/pain/`} class:list={[{ active: isPain }]}>
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" aria-hidden="true">
+                <line x1="2" y1="13" x2="14" y2="13"/>
+                <path d="M2 13 Q2 4 8 3 Q14 4 14 13"/>
+                <path d="M5 8 Q8 6.5 11 8" stroke-width="1"/>
+              </svg>
+              Pain
+            </a>
+          </li>
         </ul>
       </nav>
     </header>
@@ -115,6 +134,9 @@ const isPain = pathname.startsWith(base + '/pain') || pathname.startsWith('/pain
     list-style: none;
   }
   .nav-links a {
+    display: flex;
+    align-items: center;
+    gap: .3rem;
     font-size: .85rem;
     color: rgba(255,255,255,.6);
     text-decoration: none;

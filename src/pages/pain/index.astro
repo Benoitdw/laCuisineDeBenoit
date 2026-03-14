@@ -20,6 +20,13 @@ const serialises = tries.map(p => ({
   description="Journal de boulangerie — paramètres, notes et avis sur chaque fournée."
 >
   <div class="pain-hero">
+    <div class="hero-ornament" aria-hidden="true">
+      <svg width="220" height="220" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width=".4">
+        <line x1="2" y1="13" x2="14" y2="13"/>
+        <path d="M2 13 Q2 4 8 3 Q14 4 14 13"/>
+        <path d="M5 8 Q8 6.5 11 8" stroke-width=".35"/>
+      </svg>
+    </div>
     <div class="pain-hero-inner">
       <div class="hero-rule"></div>
       <h1>Journal Pain</h1>
@@ -42,7 +49,7 @@ const serialises = tries.map(p => ({
         </div>
         <div class="protocole-item">
           <h3>Pointage &amp; rabats</h3>
-          <p>3–4 h à 24 °C avec 4 séries de rabats (toutes les 30 min les 2 premières heures). La pâte doit doubler.</p>
+          <p>1h30–2h30 h à 24 °C avec 2 séries de rabats.Tu pe La pâte doit doubler.</p>
         </div>
         <div class="protocole-item">
           <h3>Façonnage &amp; apprêt</h3>
@@ -64,10 +71,23 @@ const serialises = tries.map(p => ({
     background: var(--forest);
     padding: 3rem 2rem 2.5rem;
     border-bottom: 3px solid var(--copper);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-ornament {
+    position: absolute;
+    right: 3rem;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: .07;
+    pointer-events: none;
+    color: var(--paper);
   }
   .pain-hero-inner {
     max-width: 960px;
     margin: 0 auto;
+    position: relative;
+    z-index: 1;
   }
   .hero-rule { width: 40px; height: 2px; background: var(--copper); margin-bottom: 1rem; }
   h1 {

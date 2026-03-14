@@ -27,15 +27,13 @@ const serialisees = triees.map(r => ({
   <!-- HERO -->
   <div class="hero">
     <div class="hero-ornament" aria-hidden="true">
-      <svg width="200" height="260" viewBox="0 0 160 200" fill="none">
-        <path d="M80 190 C80 150,78 110,82 70 C84 50,80 30,80 10" stroke="#F5EDD8" stroke-width="1.5" fill="none"/>
-        <path d="M80 160 C60 145,45 148,40 140 C55 135,72 142,80 160Z" fill="#F5EDD8" opacity=".6"/>
-        <path d="M80 130 C58 112,42 115,36 105 C52 100,70 110,80 130Z" fill="#F5EDD8" opacity=".5"/>
-        <path d="M80 100 C62 82,48 82,44 70 C58 68,72 80,80 100Z" fill="#F5EDD8" opacity=".4"/>
-        <path d="M80 145 C100 130,115 133,120 125 C105 120,88 128,80 145Z" fill="#F5EDD8" opacity=".55"/>
-        <path d="M80 115 C102 97,118 98,124 88 C108 84,90 94,80 115Z" fill="#F5EDD8" opacity=".45"/>
-        <path d="M80 85 C100 68,114 66,118 55 C104 52,88 62,80 85Z" fill="#F5EDD8" opacity=".35"/>
-        <circle cx="80" cy="12" r="3" fill="#F5EDD8" opacity=".4"/>
+      <svg width="200" height="200" viewBox="0 0 16 16" fill="none" stroke="#F5EDD8" stroke-linecap="round" stroke-linejoin="round" stroke-width=".4">
+        <path d="M6 5 Q5 8 6 11 Q8 15 9 13 Q11 9 10 5Z"/>
+        <path d="M8 5 C8 3 6 1 5 1"/>
+        <path d="M8 5 C8 2 9 1 10 0"/>
+        <path d="M8 5 C7 3 7 1 8 0"/>
+        <line x1="7" y1="7" x2="9.5" y2="6.5" stroke-width=".3" opacity=".6"/>
+        <line x1="6.5" y1="9.5" x2="9.5" y2="9" stroke-width=".3" opacity=".6"/>
       </svg>
     </div>
     <div class="hero-inner">
@@ -69,7 +67,9 @@ const serialisees = triees.map(r => ({
   }
   .hero-ornament {
     position: absolute;
-    right: 3rem; top: 1rem;
+    right: 3rem;
+    top: 50%;
+    transform: translateY(-50%);
     opacity: .08;
     pointer-events: none;
   }
