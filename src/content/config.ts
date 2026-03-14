@@ -36,4 +36,22 @@ const recettes = defineCollection({
   }),
 });
 
-export const collections = { recettes };
+const pain = defineCollection({
+  schema: z.object({
+    date: z.date(),
+    titre: z.string().optional(),
+    farine_principale: z.string(),
+    farine_secondaire: z.string().optional(),
+    farine_g: z.number(),
+    eau_g: z.number(),
+    sel_g: z.number(),
+    levure: z.string(),
+    levure_g: z.number().optional(),
+    autres: z.string().optional(),
+    note: z.number().min(1).max(5),
+    avis: z.string(),
+    photo: z.string().optional(),
+  }),
+});
+
+export const collections = { recettes, pain };

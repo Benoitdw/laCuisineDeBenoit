@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TableauPain from '../../components/TableauPain.svelte';
+import { getCollection } from 'astro:content';
+
+const pains = await getCollection('pain');
+const tries = pains.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const serialises = tries.map(p => ({
+  id: p.id,
+  data: {
+    ...p.data,
+    date: p.data.date.toISOString(),
+  },
+}));
+---
+
+<BaseLayout
+  title="Pain"
+  description="Journal de boulangerie — paramètres, notes et avis sur chaque fournée."
+>
+  <div class="pain-hero">
+    <div class="pain-hero-inner">
+      <div class="hero-rule"></div>
+      <h1>Journal Pain</h1>
+      <p class="pain-intro">
+        Chaque entrée consigne les paramètres d'une fournée : farines, hydratation, sel, levure — et une note honnête.
+      </p>
+    </div>
+  </div>
+
+  <div class="content">
+    <TableauPain client:load pains={serialises} />
+  </div>
+</BaseLayout>
+
+<style>
+  .pain-hero {
+    background: var(--forest);
+    padding: 3rem 2rem 2.5rem;
+    border-bottom: 3px solid var(--copper);
+  }
+  .pain-hero-inner {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .hero-rule { width: 40px; height: 2px; background: var(--copper); margin-bottom: 1rem; }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 700;
+    color: var(--paper);
+    margin-bottom: .7rem;
+  }
+  .pain-intro {
+    font-style: italic;
+    color: rgba(245,237,216,.6);
+    font-size: .95rem;
+    max-width: 480px;
+    line-height: 1.7;
+  }
+  .content {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem 2rem 4rem;
+  }
+</style>
