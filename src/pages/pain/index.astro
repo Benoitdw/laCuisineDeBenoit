@@ -30,6 +30,35 @@ const serialises = tries.map(p => ({
   </div>
 
   <div class="content">
+    <details class="protocole">
+      <summary>
+        <span class="protocole-titre">Protocole de base</span>
+        <span class="protocole-hint">hydratation · pousse · cuisson</span>
+      </summary>
+      <div class="protocole-body">
+        <div class="protocole-item">
+          <h3>Hydratation cible</h3>
+          <p>75 % pour une mie ouverte (levain). Commencer à 70 % si la farine absorbe peu, monter progressivement.</p>
+        </div>
+        <div class="protocole-item">
+          <h3>Autolyse</h3>
+          <p>Mélanger farine + eau, repos 30–60 min avant d'ajouter levain/levure et sel. Facilite le développement du gluten.</p>
+        </div>
+        <div class="protocole-item">
+          <h3>Pointage &amp; rabats</h3>
+          <p>3–4 h à 24 °C avec 4 séries de rabats (toutes les 30 min les 2 premières heures). La pâte doit doubler.</p>
+        </div>
+        <div class="protocole-item">
+          <h3>Façonnage &amp; apprêt</h3>
+          <p>Façonner en boule ou bâtard. Apprêt 1 h à TA ou une nuit au frigo (4 °C) pour plus de saveur.</p>
+        </div>
+        <div class="protocole-item">
+          <h3>Cuisson</h3>
+          <p>Four à 250 °C avec cocotte préchauffée. 20 min couvert, 20–25 min découvert jusqu'à croûte dorée foncée.</p>
+        </div>
+      </div>
+    </details>
+
     <TableauPain client:load pains={serialises} />
   </div>
 </BaseLayout>
@@ -63,5 +92,66 @@ const serialises = tries.map(p => ({
     max-width: 960px;
     margin: 0 auto;
     padding: 2rem 2rem 4rem;
+  }
+
+  /* Protocole de base */
+  .protocole {
+    border-left: 3px solid var(--copper);
+    background: rgba(184,115,51,.04);
+    border-radius: 0 3px 3px 0;
+    margin-bottom: 2.5rem;
+  }
+
+  .protocole summary {
+    cursor: pointer;
+    padding: .9rem 1.25rem;
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    list-style: none;
+    user-select: none;
+  }
+  .protocole summary::-webkit-details-marker { display: none; }
+
+  .protocole[open] summary {
+    border-bottom: 1px solid rgba(184,115,51,.2);
+  }
+
+  .protocole-titre {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--forest);
+  }
+
+  .protocole-hint {
+    font-size: .78rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--copper);
+    font-family: 'Lora', serif;
+  }
+
+  .protocole-body {
+    padding: 1rem 1.25rem 1.25rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem 1.5rem;
+  }
+
+  .protocole-item h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: .85rem;
+    font-weight: 700;
+    color: var(--copper);
+    margin-bottom: .3rem;
+    letter-spacing: .03em;
+  }
+
+  .protocole-item p {
+    font-family: 'Lora', serif;
+    font-size: .85rem;
+    line-height: 1.6;
+    color: var(--ink);
   }
 </style>

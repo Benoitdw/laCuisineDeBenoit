@@ -76,8 +76,10 @@ async function main() {
     const quantite = await ask("  Quantité", "0");
     const unite = await ask("  Unité (gr, ml, etc.)", "");
     const note = await ask("  Note (optionnel)", "");
+    const interchangeable = (await ask("  Interchangeable ? (o/n)", "n")) === "o";
     const entry = { nom, quantite: Number(quantite), unite };
     if (note) entry.note = note;
+    if (interchangeable) entry.interchangeable = true;
     ingredients.push(entry);
   }
 
@@ -94,6 +96,7 @@ async function main() {
     .map((ing) => {
       let block = `  - nom: "${ing.nom}"\n    quantite: ${ing.quantite}\n    unite: "${ing.unite}"`;
       if (ing.note) block += `\n    note: "${ing.note}"`;
+      if (ing.interchangeable) block += `\n    interchangeable: true`;
       return block;
     })
     .join("\n");

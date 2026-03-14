@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FiltreRecettes from '../../components/FiltreRecettes.svelte';
+import { getCollection } from 'astro:content';
+
+const recettes = await getCollection('recettes');
+const courantes = recettes.filter(r => !r.data.archive_de);
+const triees = courantes.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const serialisees = triees.map(r => ({
+  slug: r.id.replace(/\/index\.md$/, '').replace(/\.md$/, ''),
+  data: {
+    ...r.data,
+    date: r.data.date.toISOString(),
+    // Préfixer le base URL pour que Svelte puisse utiliser l'image directement
+    image: r.data.image ? `${base}${r.data.image}` : undefined,
+  },
+}));
+---
+
+<BaseLayout
+  title="Recettes"
+  description="Recettes de cuisine simples et savoureuses — du quotidien à l'occasion spéciale."
+>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-ornament" aria-hidden="true">
+      <svg width="200" height="260" viewBox="0 0 160 200" fill="none">
+        <path d="M80 190 C80 150,78 110,82 70 C84 50,80 30,80 10" stroke="#F5EDD8" stroke-width="1.5" fill="none"/>
+        <path d="M80 160 C60 145,45 148,40 140 C55 135,72 142,80 160Z" fill="#F5EDD8" opacity=".6"/>
+        <path d="M80 130 C58 112,42 115,36 105 C52 100,70 110,80 130Z" fill="#F5EDD8" opacity=".5"/>
+        <path d="M80 100 C62 82,48 82,44 70 C58 68,72 80,80 100Z" fill="#F5EDD8" opacity=".4"/>
+        <path d="M80 145 C100 130,115 133,120 125 C105 120,88 128,80 145Z" fill="#F5EDD8" opacity=".55"/>
+        <path d="M80 115 C102 97,118 98,124 88 C108 84,90 94,80 115Z" fill="#F5EDD8" opacity=".45"/>
+        <path d="M80 85 C100 68,114 66,118 55 C104 52,88 62,80 85Z" fill="#F5EDD8" opacity=".35"/>
+        <circle cx="80" cy="12" r="3" fill="#F5EDD8" opacity=".4"/>
+      </svg>
+    </div>
+    <div class="hero-inner">
+      <div class="hero-rule"></div>
+      <h1>Recettes</h1>
+      <p class="hero-intro">
+        Bienvenue dans ma cuisine, ici on y trouve des recettes simples, de saison, testées et parfois à améliorer. Pas de rigidité dans les recettes la plupart des ingrédients sont interchangeable
+        et sont à adapter avec ce que vous avez sous la main.
+      </p>
+    </div>
+  </div>
+
+  <!-- RECETTES + FILTRES -->
+  <div class="content">
+    <FiltreRecettes
+      client:load
+      recettes={serialisees}
+      base={base}
+    />
+  </div>
+
+</BaseLayout>
+
+<style>
+  .hero {
+    background: var(--forest);
+    padding: 4rem 2rem 3.5rem;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 3px solid var(--copper);
+  }
+  .hero-ornament {
+    position: absolute;
+    right: 3rem; top: 1rem;
+    opacity: .08;
+    pointer-events: none;
+  }
+  .hero-inner {
+    max-width: 820px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-rule { width: 40px; height: 2px; background: var(--copper); margin-bottom: 1.1rem; }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    color: var(--paper);
+    line-height: 1.12;
+    margin-bottom: .9rem;
+  }
+  .hero-intro {
+    font-style: italic;
+    color: rgba(245,237,216,.6);
+    font-size: 1rem;
+    max-width: 500px;
+    line-height: 1.7;
+  }
+
+  .content {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 2rem 2rem 4rem;
+  }
+</style>

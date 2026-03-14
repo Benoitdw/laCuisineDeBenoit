@@ -19,6 +19,10 @@ const {
 const siteUrl = import.meta.env.SITE || 'https://bdewitte.github.io';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl);
+const pathname = Astro.url.pathname;
+const isHome = pathname === base + '/' || pathname === base || pathname === '/';
+const isRecettes = pathname.startsWith(base + '/recettes') || pathname.startsWith('/recettes');
+const isPain = pathname.startsWith(base + '/pain') || pathname.startsWith('/pain');
 ---
 
 <!doctype html>
@@ -56,8 +60,9 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl);
           </div>
         </a>
         <ul class="nav-links">
-          <li><a href={`${base}/`}>Accueil</a></li>
-          <li><a href={`${base}/pain/`}>Pain</a></li>
+          <li><a href={`${base}/`} class:list={[{ active: isHome }]}>Accueil</a></li>
+          <li><a href={`${base}/recettes/`} class:list={[{ active: isRecettes }]}>Recettes</a></li>
+          <li><a href={`${base}/pain/`} class:list={[{ active: isPain }]}>Pain</a></li>
         </ul>
       </nav>
     </header>
@@ -76,10 +81,11 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl);
 <style is:global>
   nav {
     background: var(--forest);
-    padding: .85rem 2rem;
+    padding: 1rem 2rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-bottom: 2px solid var(--copper);
   }
   .logo {
     display: flex;
@@ -109,13 +115,20 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl);
     list-style: none;
   }
   .nav-links a {
-    font-size: .8rem;
-    color: rgba(255,255,255,.55);
+    font-size: .85rem;
+    color: rgba(255,255,255,.6);
     text-decoration: none;
-    letter-spacing: .05em;
+    letter-spacing: .06em;
     text-transform: uppercase;
+    padding-bottom: .15rem;
+    border-bottom: 2px solid transparent;
+    transition: color .15s, border-color .15s;
   }
   .nav-links a:hover { color: var(--copper-lt); }
+  .nav-links a.active {
+    color: var(--copper-lt);
+    border-bottom-color: var(--copper-lt);
+  }
 
   footer {
     background: var(--forest);

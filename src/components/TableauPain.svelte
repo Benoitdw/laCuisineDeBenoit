@@ -1,24 +1,47 @@
 <script lang="ts">
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
   export let pains: Array<{
     id: string;
     data: {
       date: string;
       titre?: string;
       farine_principale: string;
-      farine_secondaire?: string;
       farine_g: number;
+      farines_secondaires?: { type: string; g: number }[];
       eau_g: number;
       sel_g: number;
       levure: string;
       levure_g?: number;
       autres?: string;
+      poids_g?: number;
       note: number;
       avis: string;
-      photo?: string;
+      photos?: string[];
     };
   }> = [];
 
   let selected: typeof pains[0] | null = null;
+  let cible = 0;
+
+  function farineTotal(d: typeof pains[0]['data']) {
+    return d.farine_g + (d.farines_secondaires?.reduce((s, f) => s + f.g, 0) ?? 0);
+  }
+
+  $: if (selected) {
+    const base = farineTotal(selected.data) + selected.data.eau_g + selected.data.sel_g + (selected.data.levure_g ?? 0);
+    cible = selected.data.poids_g ?? base;
+  }
+
+  $: poidsBase = selected
+    ? farineTotal(selected.data) + selected.data.eau_g + selected.data.sel_g + (selected.data.levure_g ?? 0)
+    : 1;
+
+  $: facteur = poidsBase > 0 ? cible / poidsBase : 1;
+
+  function ajuster(delta: number) {
+    cible = Math.max(300, cible + delta);
+  }
 
   function etoiles(n: number) {
     return '★'.repeat(n) + '☆'.repeat(5 - n);
@@ -70,8 +93,8 @@
             <td class="date">{formatDate(p.data.date)}</td>
             <td class="titre">{p.data.titre || '—'}</td>
             <td>{p.data.farine_principale}</td>
-            <td>{p.data.farine_secondaire || '—'}</td>
-            <td class="num">{pct(p.data.eau_g, p.data.farine_g)} %</td>
+            <td>{p.data.farines_secondaires?.map(f => f.type).join(', ') || '—'}</td>
+            <td class="num">{pct(p.data.eau_g, farineTotal(p.data))} %</td>
             <td class="num">{pct(p.data.sel_g, p.data.farine_g)} %</td>
             <td>{p.data.levure}</td>
             <td class="autres">{p.data.autres || '—'}</td>
@@ -93,9 +116,26 @@
       <h2>{label(selected)}</h2>
       <p class="modal-date">{formatDate(selected.data.date)}</p>
 
-      {#if selected.data.photo}
-        <img src={selected.data.photo} alt={label(selected)} class="modal-photo" />
+      {#if selected.data.photos && selected.data.photos.length > 0}
+        <div class="galerie">
+          {#each selected.data.photos as src, i}
+            <img src="{base}{src}" alt="{label(selected)} photo {i + 1}" class="galerie-img" />
+          {/each}
+        </div>
       {/if}
+
+      <!-- Calculateur de poids -->
+      <div class="calculateur">
+        <span class="calc-label">Poids cible :</span>
+        <div class="calc-controls">
+          <button class="calc-btn" on:click={() => ajuster(-100)}>− 100 g</button>
+          <span class="calc-val">{cible} g</span>
+          <button class="calc-btn" on:click={() => ajuster(100)}>+ 100 g</button>
+        </div>
+        {#if facteur !== 1}
+          <span class="calc-hint">(× {facteur.toFixed(2)})</span>
+        {/if}
+      </div>
 
       <table class="detail-table">
         <thead>
@@ -103,25 +143,32 @@
         </thead>
         <tbody>
           <tr>
-            <td>Farine ({selected.data.farine_principale}{selected.data.farine_secondaire ? ' + ' + selected.data.farine_secondaire : ''})</td>
-            <td class="num">{selected.data.farine_g} g</td>
-            <td class="num">100 %</td>
+            <td>Farine {selected.data.farine_principale}</td>
+            <td class="num">{Math.round(selected.data.farine_g * facteur)} g</td>
+            <td class="num">{pct(selected.data.farine_g, farineTotal(selected.data))} %</td>
           </tr>
+          {#each selected.data.farines_secondaires ?? [] as f}
+            <tr>
+              <td>Farine {f.type}</td>
+              <td class="num">{Math.round(f.g * facteur)} g</td>
+              <td class="num">{pct(f.g, farineTotal(selected.data))} %</td>
+            </tr>
+          {/each}
           <tr>
             <td>Eau</td>
-            <td class="num">{selected.data.eau_g} g</td>
-            <td class="num">{pct(selected.data.eau_g, selected.data.farine_g)} %</td>
+            <td class="num">{Math.round(selected.data.eau_g * facteur)} g</td>
+            <td class="num">{pct(selected.data.eau_g, farineTotal(selected.data))} %</td>
           </tr>
           <tr>
             <td>Sel</td>
-            <td class="num">{selected.data.sel_g} g</td>
-            <td class="num">{pct(selected.data.sel_g, selected.data.farine_g)} %</td>
+            <td class="num">{Math.round(selected.data.sel_g * facteur)} g</td>
+            <td class="num">{pct(selected.data.sel_g, farineTotal(selected.data))} %</td>
           </tr>
           {#if selected.data.levure_g !== undefined}
             <tr>
               <td>Levure ({selected.data.levure})</td>
-              <td class="num">{selected.data.levure_g} g</td>
-              <td class="num">{pct(selected.data.levure_g, selected.data.farine_g)} %</td>
+              <td class="num">{Math.round(selected.data.levure_g * facteur)} g</td>
+              <td class="num">{pct(selected.data.levure_g, farineTotal(selected.data))} %</td>
             </tr>
           {:else}
             <tr>
@@ -255,11 +302,77 @@
     margin-bottom: 1.25rem;
   }
 
-  .modal-photo {
-    width: 100%;
-    border-radius: 3px;
+  /* Galerie photos */
+  .galerie {
+    display: flex;
+    gap: .5rem;
+    overflow-x: auto;
     margin-bottom: 1.25rem;
-    display: block;
+    border-radius: 3px;
+  }
+
+  .galerie-img {
+    height: 160px;
+    width: auto;
+    min-width: 120px;
+    object-fit: cover;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  /* Calculateur */
+  .calculateur {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    flex-wrap: wrap;
+    background: rgba(184,115,51,.08);
+    border: 1px solid rgba(184,115,51,.2);
+    border-radius: 3px;
+    padding: .6rem 1rem;
+    margin-bottom: 1rem;
+    font-family: 'Lora', serif;
+    font-size: .88rem;
+  }
+
+  .calc-label {
+    color: var(--ink, #2c2c2c);
+    font-style: italic;
+  }
+
+  .calc-controls {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+
+  .calc-btn {
+    background: var(--copper, #b87333);
+    color: white;
+    border: none;
+    border-radius: 2px;
+    padding: .25rem .65rem;
+    font-size: .8rem;
+    cursor: pointer;
+    font-family: 'Lora', serif;
+    transition: background .15s;
+  }
+  .calc-btn:hover { background: var(--copper-lt, #d4956a); }
+
+  .calc-val {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--forest, #2d4a3e);
+    min-width: 4.5rem;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .calc-hint {
+    font-size: .78rem;
+    color: var(--ink-lt, #888);
+    font-style: italic;
   }
 
   .detail-table {

@@ -41,16 +41,20 @@ const pain = defineCollection({
     date: z.date(),
     titre: z.string().optional(),
     farine_principale: z.string(),
-    farine_secondaire: z.string().optional(),
     farine_g: z.number(),
+    farines_secondaires: z.array(z.object({
+      type: z.string(),
+      g: z.number(),
+    })).optional(),
     eau_g: z.number(),
     sel_g: z.number(),
     levure: z.string(),
     levure_g: z.number().optional(),
     autres: z.string().optional(),
+    poids_g: z.number().optional(),
     note: z.number().min(1).max(5),
     avis: z.string(),
-    photo: z.string().optional(),
+    photos: z.array(z.string()).optional(),
   }),
 });
 
