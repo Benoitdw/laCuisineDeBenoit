@@ -631,7 +631,14 @@
           </div>
         {:else}
           <button class="btn-propose" onclick={() => showProposeForm = true}>
-            Proposer ce protocoleNe
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="5" cy="4" r="1.5"/>
+              <circle cx="11" cy="4" r="1.5"/>
+              <circle cx="5" cy="12" r="1.5"/>
+              <line x1="5" y1="5.5" x2="5" y2="10.5"/>
+              <path d="M11 5.5 Q11 9 7.5 10 L5 10.5"/>
+            </svg>
+            Proposer ce protocole
           </button>
         {/if}
       </div>
@@ -733,7 +740,47 @@
       >
         {soundEnabled ? '🔔' : '🔕'}
       </button>
-      <button class="btn-control btn-reset" onclick={resetTimer}>↺ Reset</button>
+
+      <div class="controls-right">
+        <button class="btn-qr" onclick={openQRModal} title="Générer un QR Code pour partager ce protocole">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="1" y="1" width="5" height="5" rx=".5"/><rect x="2" y="2" width="3" height="3"/>
+            <rect x="10" y="1" width="5" height="5" rx=".5"/><rect x="11" y="2" width="3" height="3"/>
+            <rect x="1" y="10" width="5" height="5" rx=".5"/><rect x="2" y="11" width="3" height="3"/>
+            <line x1="10" y1="10" x2="10" y2="10.01"/><line x1="13" y1="10" x2="13" y2="10.01"/>
+            <line x1="10" y1="13" x2="10" y2="15"/><line x1="13" y1="12" x2="15" y2="12"/>
+            <line x1="15" y1="15" x2="15" y2="15.01"/>
+          </svg>
+          QR Code
+        </button>
+        {#if showProposeForm}
+          <div class="propose-form">
+            <input
+              class="propose-input"
+              type="text"
+              bind:value={proposePresetName}
+              placeholder="Nom de mon preset"
+              onkeydown={(e) => e.key === 'Enter' && proposePresetName && proposePreset()}
+            />
+            <button class="btn-propose-confirm" onclick={proposePreset} disabled={!proposePresetName}>
+              Ouvrir GitHub →
+            </button>
+            <button class="btn-ghost-sm" onclick={() => { showProposeForm = false; proposePresetName = ''; }}>Annuler</button>
+          </div>
+        {:else}
+          <button class="btn-propose" onclick={() => showProposeForm = true}>
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="5" cy="4" r="1.5"/>
+              <circle cx="11" cy="4" r="1.5"/>
+              <circle cx="5" cy="12" r="1.5"/>
+              <line x1="5" y1="5.5" x2="5" y2="10.5"/>
+              <path d="M11 5.5 Q11 9 7.5 10 L5 10.5"/>
+            </svg>
+            Proposer ce protocole
+          </button>
+        {/if}
+        <button class="btn-control btn-reset" onclick={resetTimer}>↺ Reset</button>
+      </div>
     </div>
 
   </div>
@@ -1066,18 +1113,20 @@
   }
 
   .btn-propose {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
     background: none;
-    border: none;
+    border: 1px solid var(--rule, rgba(28,22,14,.15));
+    border-radius: 3px;
     font-family: 'Lora', serif;
-    font-size: .82rem;
+    font-size: .85rem;
     color: var(--muted, #7A6D5C);
+    padding: .5rem .9rem;
     cursor: pointer;
-    padding: .4rem 0;
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    opacity: .7;
+    transition: all .15s;
   }
-  .btn-propose:hover { opacity: 1; color: var(--copper, #AD6B35); }
+  .btn-propose:hover { border-color: var(--forest, #2D4228); color: var(--forest, #2D4228); }
 
   .propose-form {
     display: flex;
@@ -1323,8 +1372,15 @@
     text-decoration: line-through;
   }
 
-  .btn-reset {
+  .controls-right {
     margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-reset {
     color: var(--muted, #7A6D5C);
     font-size: .8rem;
   }
