@@ -598,19 +598,18 @@
         Démarrer
       </button>
 
-      <button class="btn-qr" onclick={openQRModal} title="Générer un QR Code pour partager ce protocole">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <rect x="1" y="1" width="5" height="5" rx=".5"/><rect x="2" y="2" width="3" height="3"/>
-          <rect x="10" y="1" width="5" height="5" rx=".5"/><rect x="11" y="2" width="3" height="3"/>
-          <rect x="1" y="10" width="5" height="5" rx=".5"/><rect x="2" y="11" width="3" height="3"/>
-          <line x1="10" y1="10" x2="10" y2="10.01"/><line x1="13" y1="10" x2="13" y2="10.01"/>
-          <line x1="10" y1="13" x2="10" y2="15"/><line x1="13" y1="12" x2="15" y2="12"/>
-          <line x1="15" y1="15" x2="15" y2="15.01"/>
-        </svg>
-        QR Code
-      </button>
-
       <div class="propose-wrap">
+        <button class="btn-qr" onclick={openQRModal} title="Générer un QR Code pour partager ce protocole">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="1" y="1" width="5" height="5" rx=".5"/><rect x="2" y="2" width="3" height="3"/>
+            <rect x="10" y="1" width="5" height="5" rx=".5"/><rect x="11" y="2" width="3" height="3"/>
+            <rect x="1" y="10" width="5" height="5" rx=".5"/><rect x="2" y="11" width="3" height="3"/>
+            <line x1="10" y1="10" x2="10" y2="10.01"/><line x1="13" y1="10" x2="13" y2="10.01"/>
+            <line x1="10" y1="13" x2="10" y2="15"/><line x1="13" y1="12" x2="15" y2="12"/>
+            <line x1="15" y1="15" x2="15" y2="15.01"/>
+          </svg>
+          QR Code
+        </button>
         {#if showProposeForm}
           <div class="propose-form">
             <input
@@ -1110,6 +1109,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    gap: .75rem;
   }
 
   .btn-propose {
