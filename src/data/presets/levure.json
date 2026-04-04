@@ -1,0 +1,35 @@
+{
+  "id": "levure",
+  "label": "Pain à la levure",
+  "sections": [
+    {
+      "id": "petrissage",
+      "name": "Pétrissage",
+      "steps": [
+        { "name": "Mélange + pétrissage", "dureeMin": 15 }
+      ]
+    },
+    {
+      "id": "pointage",
+      "name": "Pointage",
+      "steps": [
+        { "name": "1ère pousse", "dureeMin": 60 }
+      ]
+    },
+    {
+      "id": "appret",
+      "name": "Apprêt",
+      "steps": [
+        { "name": "Façonnage + 2ème pousse", "dureeMin": 45 }
+      ]
+    },
+    {
+      "id": "cuisson",
+      "name": "Cuisson",
+      "steps": [
+        { "name": "Préchauffage (220°C)", "dureeMin": 20 },
+        { "name": "Cuisson", "dureeMin": 30 }
+      ]
+    }
+  ]
+}

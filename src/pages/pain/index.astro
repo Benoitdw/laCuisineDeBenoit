@@ -43,6 +43,17 @@ const serialises = tries.map(p => ({
         <span class="protocole-hint">Autolyse · Pointage · Façonnage · Cuisson </span>
       </summary>
       <div class="protocole-body">
+        <div class="protocole-item protocole-chrono">
+          <a href="chrono/" class="chrono-cta">
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width=".9" aria-hidden="true">
+              <circle cx="8" cy="8" r="5.5"/>
+              <line x1="8" y1="8" x2="8" y2="4.5"/>
+              <line x1="8" y1="8" x2="10.5" y2="9.5"/>
+            </svg>
+            Lancer le Chrono Pain
+          </a>
+          <p class="chrono-desc">Minuteur pas à pas pour guider chaque étape de la fournée.</p>
+        </div>
         <div class="protocole-item">
           <h3>Autolyse</h3>
           <p>Mélanger farine + eau, repos 30–60 min avant d'ajouter levain/levure et sel. Facilite le développement du gluten.</p>
@@ -153,6 +164,35 @@ const serialises = tries.map(p => ({
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 1rem 1.5rem;
+  }
+
+  .protocole-chrono {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: .4rem;
+    border-right: 1px solid rgba(184,115,51,.15);
+  }
+
+  .chrono-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-family: 'Playfair Display', serif;
+    font-size: .9rem;
+    font-weight: 700;
+    color: var(--forest);
+    text-decoration: none;
+    transition: color .15s;
+  }
+  .chrono-cta:hover { color: var(--copper); }
+
+  .chrono-desc {
+    font-family: 'Lora', serif;
+    font-size: .82rem;
+    line-height: 1.5;
+    color: var(--muted);
+    font-style: italic;
   }
 
   .protocole-item h3 {

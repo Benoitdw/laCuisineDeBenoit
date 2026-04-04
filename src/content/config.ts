@@ -55,6 +55,7 @@ const pain = defineCollection({
     note: z.number().min(1).max(5),
     avis: z.string(),
     photos: z.array(z.string()).optional(),
+    preset: z.string().optional(),
   }),
 });
 

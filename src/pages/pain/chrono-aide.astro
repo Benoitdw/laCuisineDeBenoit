@@ -1,0 +1,584 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<BaseLayout
+  title="Aide — Chrono Pain"
+  description="Comment utiliser le minuteur pas à pas pour la boulangerie maison."
+>
+  <div class="aide-hero">
+    <div class="hero-inner">
+      <div class="hero-rule"></div>
+      <h1>Comment utiliser le Chrono Pain</h1>
+      <p class="hero-intro">
+        Le chrono guide chaque étape de votre fournée, de l'autolyse à la cuisson.
+      </p>
+      <nav class="hero-nav">
+        <a href="{base}/pain/chrono/">← Retour au chrono</a>
+        <a href="{base}/pain/">Journal pain</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ── Vue d'ensemble ─────────────────────────────────────────────── -->
+    <section class="aide-section">
+      <h2>Vue d'ensemble</h2>
+      <p>
+        Le chrono est structuré en <strong>sections</strong> (Pétrissage, Pointage, Apprêt, Cuisson)
+        et en <strong>étapes</strong> à l'intérieur de chaque section.
+      </p>
+      <div class="concept-grid">
+        <div class="concept-card">
+          <div class="concept-icon">⏱</div>
+          <h3>Étapes</h3>
+          <p>Les étapes s'enchaînent <em>automatiquement</em> — un son de cloche retentit à chaque transition. Vous pouvez cocher une étape manuellement sans arrêter le timer (utile si vous faites un rabat à 28 min au lieu de 30).</p>
+        </div>
+        <div class="concept-card">
+          <div class="concept-icon">✋</div>
+          <h3>Sections</h3>
+          <p>Le passage d'une section à l'autre nécessite une <em>validation manuelle</em>. Une alarme sonne en fin de section et un bouton de confirmation apparaît. Cela vous laisse le temps de vérifier la pâte avant de continuer.</p>
+        </div>
+        <div class="concept-card">
+          <div class="concept-icon">💾</div>
+          <h3>Reprise automatique</h3>
+          <p>Si vous fermez l'onglet pendant un pointage de 4h, le chrono reprend exactement là où il en était à la réouverture.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Phase config ───────────────────────────────────────────────── -->
+    <section class="aide-section">
+      <h2><span class="step-num">1</span> Configurer le protocole</h2>
+
+      <div class="aide-block">
+        <div class="aide-text">
+          <h3>Choisir un preset</h3>
+          <p>Sélectionnez un protocole de départ dans la liste déroulante.
+             Deux presets sont disponibles : <strong>Pain au levain</strong> et <strong>Pain à la levure</strong>.
+             Le formulaire et la ligne de temps se mettent à jour immédiatement.
+          </p>
+        </div>
+        <figure class="screenshot-slot">
+          <div class="screenshot-placeholder">
+            <span>📸 Screenshot A</span>
+            <p>Page chrono — sélecteur de preset visible, timeline preview en dessous</p>
+          </div>
+        </figure>
+      </div>
+
+      <div class="aide-block aide-block-reverse">
+        <div class="aide-text">
+          <h3>Modifier sections et étapes</h3>
+          <p>Chaque section et chaque étape est directement éditable :</p>
+          <ul>
+            <li>Cliquez sur un nom pour le modifier</li>
+            <li>Changez la durée (en minutes) dans le champ numérique</li>
+            <li><strong>+ Étape</strong> ajoute une étape à la fin d'une section</li>
+            <li><strong>+ Section</strong> ajoute une nouvelle section</li>
+            <li><strong>×</strong> supprime une étape ou une section</li>
+          </ul>
+          <p class="aide-note">La timeline de prévisualisation se met à jour en temps réel.</p>
+        </div>
+        <figure class="screenshot-slot">
+          <div class="screenshot-placeholder">
+            <span>📸 Screenshot B</span>
+            <p>Formulaire d'édition d'une section avec ses étapes, boutons + et ×</p>
+          </div>
+        </figure>
+      </div>
+
+      <div class="aide-block">
+        <div class="aide-text">
+          <h3>Démarrer</h3>
+          <p>Cliquez sur <strong>Démarrer</strong> pour lancer le timer. Le contexte audio est initialisé au premier clic — assurez-vous que le son est activé sur votre appareil.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Phase active ───────────────────────────────────────────────── -->
+    <section class="aide-section">
+      <h2><span class="step-num">2</span> Pendant la fournée</h2>
+
+      <div class="aide-block">
+        <div class="aide-text">
+          <h3>Écran principal</h3>
+          <p>L'écran actif affiche :</p>
+          <ul>
+            <li>La <strong>timeline</strong> avec votre position (point blanc sur fond sombre)</li>
+            <li>Le nom de la section en cours (badge)</li>
+            <li>Le nom de l'étape en cours</li>
+            <li>Le <strong>décompte</strong> en grand (MM:SS)</li>
+            <li>Un bandeau avec la durée avant fin de section et l'<strong>heure de fin prévue</strong></li>
+          </ul>
+        </div>
+        <figure class="screenshot-slot">
+          <div class="screenshot-placeholder">
+            <span>📸 Screenshot C</span>
+            <p>Timer actif — countdown, badge section, bandeau infos</p>
+          </div>
+        </figure>
+      </div>
+
+      <div class="aide-block aide-block-reverse">
+        <div class="aide-text">
+          <h3>Cocher une étape manuellement</h3>
+          <p>
+            Le timer ne s'arrête pas entre les étapes — si vous faites un rabat à 28 min au lieu de 30, appuyez sur
+            <strong>"Marquer comme faite"</strong> pour l'indiquer. L'étape apparaît cochée dans la timeline sans interrompre le décompte.
+          </p>
+        </div>
+        <figure class="screenshot-slot">
+          <div class="screenshot-placeholder">
+            <span>📸 Screenshot D</span>
+            <p>Bouton "Marquer comme faite" et étape cochée dans la timeline</p>
+          </div>
+        </figure>
+      </div>
+
+      <div class="aide-block">
+        <div class="aide-text">
+          <h3>Validation de section</h3>
+          <p>
+            Quand toutes les étapes d'une section sont terminées, une <strong>alarme</strong> retentit et un écran de confirmation apparaît.
+            Vérifiez votre pâte, puis appuyez sur <strong>"Commencer →"</strong> pour démarrer la section suivante.
+          </p>
+        </div>
+        <figure class="screenshot-slot">
+          <div class="screenshot-placeholder">
+            <span>📸 Screenshot E</span>
+            <p>Écran de gate de section — fond sombre, bouton "Commencer →"</p>
+          </div>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ── Contrôles ─────────────────────────────────────────────────── -->
+    <section class="aide-section">
+      <h2><span class="step-num">3</span> Contrôles</h2>
+
+      <div class="controles-grid">
+        <div class="controle-item">
+          <code>⏸ Pause / ▶ Reprendre</code>
+          <p>Met le timer en pause. Le son est suspendu et le décompte s'arrête. La reprise repart du point exact.</p>
+        </div>
+        <div class="controle-item">
+          <code>🔔 / 🔕 Son</code>
+          <p>Active ou coupe les sons (cloche entre étapes, alarme en fin de section). Le réglage est sauvegardé avec l'état du timer.</p>
+        </div>
+        <div class="controle-item">
+          <code>↺ Reset</code>
+          <p>Réinitialise complètement le chrono et efface la sauvegarde. Vous revenez à l'écran de configuration.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Reprise ────────────────────────────────────────────────────── -->
+    <section class="aide-section">
+      <h2><span class="step-num">4</span> Reprise automatique</h2>
+      <p>
+        L'état du chrono (section, étape, secondes restantes, étapes cochées) est sauvegardé en continu dans le navigateur.
+        Si vous fermez l'onglet ou rechargez la page, une bannière de reprise s'affiche au retour.
+      </p>
+      <div class="aide-block">
+        <div class="aide-text">
+          <ul>
+            <li><strong>Reprendre</strong> — repart exactement là où vous en étiez</li>
+            <li><strong>Recommencer</strong> — efface la sauvegarde et affiche l'écran de configuration</li>
+          </ul>
+          <p class="aide-note">
+            Note : la sauvegarde ne tient pas compte du temps écoulé pendant la fermeture. Si vous fermez pendant un pointage,
+            reprenez le décompte manuellement depuis le temps estimé réel.
+          </p>
+        </div>
+        <figure class="screenshot-slot">
+          <div class="screenshot-placeholder">
+            <span>📸 Screenshot F</span>
+            <p>Bannière "Reprendre / Recommencer" au chargement de la page</p>
+          </div>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ── QR Code / partage ────────────────────────────────────────────── -->
+    <section class="aide-section">
+      <h2><span class="step-num">5</span> Partager un protocole</h2>
+
+      <div class="aide-block">
+        <div class="aide-text">
+          <h3>Générer un QR Code</h3>
+          <p>
+            Le bouton <strong>"QR Code"</strong> (à côté de "Démarrer") génère un QR code unique
+            pour le protocole tel qu'il est configuré à cet instant — sections, étapes, durées comprises.
+          </p>
+          <ul>
+            <li>Scannez le QR code avec l'app Android Chrono Pain pour charger le protocole instantanément</li>
+            <li>Ou copiez le lien et envoyez-le par message — l'URL s'ouvre directement sur le chrono avec le protocole pré-chargé</li>
+            <li>Si l'app n'est pas installée, le lien ouvre la version web avec le même protocole</li>
+          </ul>
+        </div>
+        <figure class="screenshot-slot">
+          <div class="screenshot-placeholder">
+            <span>📸 Screenshot G</span>
+            <p>Modale QR Code — QR code centré, URL en dessous, bouton Copier</p>
+          </div>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ── Proposer preset ────────────────────────────────────────────── -->
+    <section class="aide-section">
+      <h2><span class="step-num">6</span> Proposer un preset</h2>
+      <p>
+        Vous avez créé un protocole intéressant ? Cliquez sur <strong>"Proposer ce preset"</strong> en bas de l'écran de configuration.
+        Donnez un nom à votre preset, puis <strong>"Ouvrir GitHub →"</strong> ouvre l'éditeur web GitHub avec le fichier JSON pré-rempli.
+        Si vous avez un compte GitHub, vous pouvez soumettre une Pull Request directement depuis le navigateur — aucun outil nécessaire.
+      </p>
+    </section>
+
+    <!-- ── Récap screenshots ──────────────────────────────────────────── -->
+    <section class="aide-section recap-screenshots">
+      <h2>Récapitulatif des screenshots</h2>
+      <table class="screenshots-table">
+        <thead>
+          <tr><th>Réf.</th><th>Ce qu'on voit</th><th>Comment y accéder</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>A</strong></td>
+            <td>Page config, preset chargé, timeline preview</td>
+            <td>Ouvrir <code>/pain/chrono/</code> directement</td>
+          </tr>
+          <tr>
+            <td><strong>B</strong></td>
+            <td>Formulaire d'édition — section + étapes + boutons</td>
+            <td>Même page, scroller vers les sections</td>
+          </tr>
+          <tr>
+            <td><strong>C</strong></td>
+            <td>Timer actif, countdown, bandeau infos</td>
+            <td>Cliquer Démarrer</td>
+          </tr>
+          <tr>
+            <td><strong>D</strong></td>
+            <td>Étape cochée (bouton "Marquer comme faite" + timeline)</td>
+            <td>Pendant le timer, cliquer "Marquer comme faite"</td>
+          </tr>
+          <tr>
+            <td><strong>E</strong></td>
+            <td>Gate de section — fond sombre, bouton Commencer</td>
+            <td>Modifier une étape à 1 min, attendre la fin</td>
+          </tr>
+          <tr>
+            <td><strong>F</strong></td>
+            <td>Bannière de reprise automatique</td>
+            <td>Démarrer le timer, recharger la page (F5)</td>
+          </tr>
+          <tr>
+            <td><strong>G</strong></td>
+            <td>Modale QR Code — QR centré, URL, bouton Copier</td>
+            <td>Cliquer le bouton "QR Code" dans la config</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+  </div>
+</BaseLayout>
+
+<style>
+  .aide-hero {
+    background: var(--forest);
+    padding: 2.5rem 2rem 2rem;
+    border-bottom: 3px solid var(--copper);
+  }
+
+  .hero-inner {
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  .hero-rule {
+    width: 40px;
+    height: 2px;
+    background: var(--copper);
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+    font-weight: 700;
+    color: var(--paper);
+    margin-bottom: .6rem;
+  }
+
+  .hero-intro {
+    font-style: italic;
+    color: rgba(245,237,216,.6);
+    font-size: .92rem;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+
+  .hero-nav {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .hero-nav a {
+    font-family: 'Lora', serif;
+    font-size: .8rem;
+    color: rgba(245,237,216,.5);
+    text-decoration: none;
+    letter-spacing: .04em;
+    transition: color .15s;
+  }
+  .hero-nav a:hover { color: var(--copper-lt); }
+
+  /* Content */
+  .content {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 5rem;
+  }
+
+  /* Sections */
+  .aide-section {
+    margin-bottom: 3.5rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .aide-section:last-child { border-bottom: none; }
+
+  .aide-section > h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--forest);
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+  }
+
+  .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: var(--copper);
+    color: white;
+    border-radius: 50%;
+    font-size: .8rem;
+    font-family: 'Lora', serif;
+    flex-shrink: 0;
+  }
+
+  .aide-section > p {
+    font-family: 'Lora', serif;
+    font-size: .9rem;
+    line-height: 1.75;
+    color: var(--ink);
+    margin-bottom: 1.25rem;
+  }
+
+  /* Concept grid */
+  .concept-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .concept-card {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 1.1rem 1.1rem 1rem;
+  }
+
+  .concept-icon {
+    font-size: 1.4rem;
+    margin-bottom: .5rem;
+  }
+
+  .concept-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: .9rem;
+    font-weight: 700;
+    color: var(--forest);
+    margin-bottom: .4rem;
+  }
+
+  .concept-card p {
+    font-family: 'Lora', serif;
+    font-size: .83rem;
+    line-height: 1.65;
+    color: var(--ink);
+  }
+
+  /* Aide block (text + screenshot) */
+  .aide-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+    margin-bottom: 2rem;
+  }
+
+  .aide-block-reverse {
+    direction: rtl;
+  }
+  .aide-block-reverse > * { direction: ltr; }
+
+  @media (max-width: 600px) {
+    .aide-block, .aide-block-reverse { grid-template-columns: 1fr; direction: ltr; }
+  }
+
+  .aide-text h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--forest);
+    margin-bottom: .6rem;
+  }
+
+  .aide-text p, .aide-text ul {
+    font-family: 'Lora', serif;
+    font-size: .88rem;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+
+  .aide-text ul {
+    padding-left: 1.2rem;
+    margin-bottom: .75rem;
+  }
+
+  .aide-text li { margin-bottom: .3rem; }
+
+  .aide-note {
+    font-style: italic;
+    color: var(--muted) !important;
+    font-size: .82rem !important;
+    border-left: 3px solid var(--copper-lt);
+    padding-left: .75rem;
+  }
+
+  /* Screenshot placeholder */
+  .screenshot-slot { margin: 0; }
+
+  .screenshot-placeholder {
+    background: rgba(28,22,14,.04);
+    border: 2px dashed rgba(28,22,14,.15);
+    border-radius: 4px;
+    padding: 2rem 1rem;
+    text-align: center;
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+  }
+
+  .screenshot-placeholder span {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--copper);
+  }
+
+  .screenshot-placeholder p {
+    font-family: 'Lora', serif;
+    font-size: .78rem;
+    color: var(--muted);
+    font-style: italic;
+    max-width: 200px;
+    line-height: 1.5;
+  }
+
+  /* Screenshot image (once added) */
+  .screenshot-slot img {
+    width: 100%;
+    border-radius: 4px;
+    border: 1px solid var(--rule);
+    box-shadow: 0 2px 12px rgba(0,0,0,.1);
+  }
+
+  /* Contrôles */
+  .controles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+
+  .controle-item {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 1rem;
+  }
+
+  .controle-item code {
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-size: .88rem;
+    font-weight: 700;
+    color: var(--forest);
+    background: none;
+    margin-bottom: .5rem;
+    font-style: normal;
+  }
+
+  .controle-item p {
+    font-family: 'Lora', serif;
+    font-size: .82rem;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  /* Screenshots table */
+  .screenshots-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Lora', serif;
+    font-size: .85rem;
+    margin-top: .5rem;
+  }
+
+  .screenshots-table th {
+    font-family: 'Playfair Display', serif;
+    font-size: .72rem;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--copper);
+    border-bottom: 2px solid var(--copper);
+    padding: .5rem .75rem;
+    text-align: left;
+  }
+
+  .screenshots-table td {
+    padding: .55rem .75rem;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink);
+    vertical-align: top;
+  }
+
+  .screenshots-table td:first-child {
+    white-space: nowrap;
+    color: var(--copper);
+  }
+
+  .screenshots-table code {
+    font-family: 'Lora', serif;
+    font-size: .82rem;
+    background: rgba(28,22,14,.06);
+    padding: .1rem .35rem;
+    border-radius: 2px;
+  }
+</style>

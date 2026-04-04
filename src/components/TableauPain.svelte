@@ -18,6 +18,7 @@
       note: number;
       avis: string;
       photos?: string[];
+      preset?: string;
     };
   }> = [];
 
@@ -191,6 +192,15 @@
       </div>
 
       <p class="modal-note">{etoiles(selected.data.note)} <span class="note-num">{selected.data.note}/5</span></p>
+
+      <div class="chrono-link-wrap">
+        <a
+          href="{base}/pain/chrono?preset={selected.data.preset ?? 'levain'}"
+          class="chrono-link"
+        >
+          Lancer le chrono →
+        </a>
+      </div>
     </div>
   </div>
 {/if}
@@ -426,4 +436,21 @@
     color: var(--ink-lt, #888);
     margin-left: .4rem;
   }
+
+  .chrono-link-wrap {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0,0,0,.07);
+    text-align: right;
+  }
+
+  .chrono-link {
+    font-family: 'Lora', serif;
+    font-size: .82rem;
+    color: var(--copper, #b87333);
+    text-decoration: none;
+    letter-spacing: .03em;
+    transition: color .15s;
+  }
+  .chrono-link:hover { color: var(--forest, #2d4a3e); }
 </style>
