@@ -5,7 +5,7 @@
  */
 
 import { createInterface } from 'readline';
-import { writeFileSync, existsSync } from 'fs';
+import { writeFileSync, existsSync, readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 
 const rl = createInterface({ input: process.stdin, output: process.stdout });
@@ -49,6 +49,22 @@ async function main() {
   const levure_g = await ask('Levure (g, optionnel)', '');
   const poids_g = await ask('Poids du pain sorti du four (g, optionnel)', '');
   const autres = await ask('Autres ingrédients (optionnel)', '');
+
+  // Preset chrono
+  const presetsDir = join(new URL('.', import.meta.url).pathname, '../src/data/presets');
+  let presetId = '';
+  try {
+    const files = readdirSync(presetsDir).filter(f => f.endsWith('.json'));
+    const presets = files.map(f => JSON.parse(readFileSync(join(presetsDir, f), 'utf-8')));
+    if (presets.length > 0) {
+      console.log('\nPreset chrono (pour le minuteur de fournée) :');
+      presets.forEach((p, i) => console.log(`  ${i + 1}. ${p.label} (${p.id})`));
+      console.log('  0. Aucun');
+      const choix = await ask('Choix', '0');
+      const idx = Number(choix) - 1;
+      if (idx >= 0 && idx < presets.length) presetId = presets[idx].id;
+    }
+  } catch { /* presets dir absent, on ignore */ }
   const note = await ask('Note (1-5)', '3');
   const avis = await ask('Avis', 'TODO');
 
@@ -100,6 +116,7 @@ async function main() {
   if (levure_g) lines.push(`levure_g: ${Number(levure_g)}`);
   if (poids_g) lines.push(`poids_g: ${Number(poids_g)}`);
   if (autres) lines.push(`autres: "${autres}"`);
+  if (presetId) lines.push(`preset: "${presetId}"`);
   lines.push(`note: ${noteNum}`);
   lines.push(`avis: "${avis}"`);
   lines.push('---');

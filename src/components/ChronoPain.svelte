@@ -167,8 +167,8 @@
     sections = sectionsFromPresetId(id);
   }
 
-  function addSection() {
-    sections.push({
+  function addSection(atIndex: number = sections.length) {
+    sections.splice(atIndex, 0, {
       id: crypto.randomUUID(),
       name: 'Nouvelle section',
       steps: [{ id: crypto.randomUUID(), name: 'Étape', dureeMin: 30 }],
@@ -179,8 +179,8 @@
     sections.splice(si, 1);
   }
 
-  function addStep(si: number) {
-    sections[si].steps.push({ id: crypto.randomUUID(), name: 'Étape', dureeMin: 15 });
+  function addStep(si: number, atIndex: number = sections[si].steps.length) {
+    sections[si].steps.splice(atIndex, 0, { id: crypto.randomUUID(), name: 'Étape', dureeMin: 15 });
   }
 
   function removeStep(si: number, ti: number) {
@@ -487,6 +487,10 @@
 
     <!-- Sections éditables -->
     <div class="sections-editor">
+      <button class="btn-insert-section" onclick={() => addSection(0)} title="Insérer une section ici">
+        <span class="insert-line"></span><span class="insert-plus">+ section</span><span class="insert-line"></span>
+      </button>
+
       {#each sections as section, si (section.id)}
         <div class="section-card">
           <div class="section-header">
@@ -501,6 +505,9 @@
           </div>
 
           <div class="steps-list">
+            <button class="btn-insert-step" onclick={() => addStep(si, 0)} title="Insérer une étape ici">
+              <span class="insert-line"></span><span class="insert-plus">+</span><span class="insert-line"></span>
+            </button>
             {#each section.steps as step, ti (step.id)}
               <div class="step-row">
                 <input
@@ -521,15 +528,18 @@
                 <span class="dur-unit">min</span>
                 <button class="btn-remove-step" onclick={() => removeStep(si, ti)} aria-label="Supprimer l'étape">×</button>
               </div>
+              <button class="btn-insert-step" onclick={() => addStep(si, ti + 1)} title="Insérer une étape ici">
+                <span class="insert-line"></span><span class="insert-plus">+</span><span class="insert-line"></span>
+              </button>
             {/each}
           </div>
-
-          <button class="btn-add-step" onclick={() => addStep(si)}>+ Étape</button>
         </div>
+
+        <button class="btn-insert-section" onclick={() => addSection(si + 1)} title="Insérer une section ici">
+          <span class="insert-line"></span><span class="insert-plus">+ section</span><span class="insert-line"></span>
+        </button>
       {/each}
     </div>
-
-    <button class="btn-add-section" onclick={addSection}>+ Section</button>
 
     <!-- Actions -->
     <div class="config-actions">
@@ -620,16 +630,25 @@
         <div class="step-title">{currentStep?.name ?? ''}</div>
         <div class="countdown">{formatTime(secondsLeft)}</div>
 
-        <!-- Clic sur l'étape pour la cocher -->
+        <!-- Clic sur l'étape pour la cocher / passer -->
         {#if currentStep}
-          <button
-            class="step-check-btn"
-            class:checked={checkedStepIds.has(currentStep.id)}
-            onclick={() => currentStep && toggleCheck(currentStep.id)}
-            title="Marquer cette étape comme faite"
-          >
-            {checkedStepIds.has(currentStep.id) ? '✓ Faite' : 'Marquer comme faite'}
-          </button>
+          <div class="step-actions">
+            <button
+              class="step-check-btn"
+              class:checked={checkedStepIds.has(currentStep.id)}
+              onclick={() => currentStep && toggleCheck(currentStep.id)}
+              title="Marquer cette étape comme faite sans changer le timer"
+            >
+              {checkedStepIds.has(currentStep.id) ? '✓ Faite' : 'Marquer comme faite'}
+            </button>
+            <button
+              class="btn-skip-step"
+              onclick={advanceStep}
+              title="Passer immédiatement à l'étape suivante"
+            >
+              Passer →
+            </button>
+          </div>
         {/if}
       </div>
 
@@ -934,31 +953,40 @@
   }
   .btn-remove-step:hover { opacity: 1; color: #c0392b; }
 
-  .btn-add-step {
+  /* Insert buttons (step + section) */
+  .btn-insert-step,
+  .btn-insert-section {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    width: 100%;
     background: none;
     border: none;
-    font-family: 'Lora', serif;
-    font-size: .78rem;
-    color: var(--copper, #AD6B35);
+    padding: .15rem 0;
     cursor: pointer;
-    padding: .2rem 0;
-    letter-spacing: .04em;
+    opacity: .25;
+    transition: opacity .15s;
   }
-  .btn-add-step:hover { text-decoration: underline; }
+  .btn-insert-step:hover,
+  .btn-insert-section:hover { opacity: 1; }
 
-  .btn-add-section {
-    background: none;
-    border: 1px dashed var(--rule, rgba(28,22,14,.2));
-    border-radius: 3px;
-    font-family: 'Lora', serif;
-    font-size: .85rem;
-    color: var(--muted, #7A6D5C);
-    padding: .55rem 1rem;
-    cursor: pointer;
-    width: 100%;
-    transition: border-color .15s, color .15s;
+  .btn-insert-section { padding: .3rem 0; }
+
+  .insert-line {
+    flex: 1;
+    height: 1px;
+    background: var(--copper, #AD6B35);
   }
-  .btn-add-section:hover { border-color: var(--copper, #AD6B35); color: var(--ink, #1C160E); }
+
+  .insert-plus {
+    font-family: 'Lora', serif;
+    font-size: .72rem;
+    color: var(--copper, #AD6B35);
+    white-space: nowrap;
+    letter-spacing: .05em;
+  }
+
+  .btn-insert-step .insert-plus { font-size: .78rem; font-weight: 600; }
 
   .config-actions {
     display: flex;
@@ -1139,6 +1167,28 @@
     line-height: 1;
     margin-bottom: 1rem;
   }
+
+  .step-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .75rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-skip-step {
+    display: inline-block;
+    background: none;
+    border: 1px solid var(--copper-lt, #E8D0BB);
+    border-radius: 3px;
+    font-family: 'Lora', serif;
+    font-size: .8rem;
+    color: var(--copper, #AD6B35);
+    padding: .35rem .85rem;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .btn-skip-step:hover { background: var(--copper, #AD6B35); border-color: var(--copper, #AD6B35); color: white; }
 
   .step-check-btn {
     display: inline-block;
