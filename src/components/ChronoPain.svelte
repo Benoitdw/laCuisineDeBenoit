@@ -303,7 +303,7 @@
   }
 
   // ── localStorage ──────────────────────────────────────────────────────────
-  const STORAGE_KEY = 'chronoPain_state';
+  const STORAGE_KEY = 'levainier_state';
 
   function saveToLocalStorage() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({
@@ -463,7 +463,7 @@
     <div class="qr-modal" onclick={(e) => e.stopPropagation()}>
       <button class="close" onclick={() => showQRModal = false} aria-label="Fermer">×</button>
       <h3 class="qr-title">Partager ce protocole</h3>
-      <p class="qr-sub">Scannez ce QR code avec l'app Chrono Pain, ou copiez le lien.</p>
+      <p class="qr-sub">Scannez ce QR code avec l'app Levainier, ou copiez le lien.</p>
       {#if qrDataUrl}
         <img class="qr-img" src={qrDataUrl} alt="QR code du protocole" />
       {/if}
