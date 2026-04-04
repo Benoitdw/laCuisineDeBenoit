@@ -321,8 +321,44 @@
 
   function clearLocalStorage() { localStorage.removeItem(STORAGE_KEY); }
 
+  // Avance le timer d'une durée écoulée, sans franchir les sections (validation manuelle)
+  function applyElapsedTime(s: PersistedState): void {
+    if (s.waitingForSectionValidation) return;
+    let elapsed = Math.max(0, Math.floor((Date.now() - s.savedAt) / 1000));
+    if (elapsed <= 0) return;
+
+    const section = s.sections[s.currentSectionIdx];
+    if (!section) return;
+
+    let sti = s.currentStepIdx;
+    let sLeft = s.secondsLeft;
+
+    while (elapsed > 0) {
+      if (elapsed < sLeft) {
+        sLeft -= elapsed;
+        elapsed = 0;
+      } else {
+        elapsed -= sLeft;
+        const next = sti + 1;
+        if (next >= section.steps.length) {
+          // Fin de section — on s'arrête ici
+          sLeft = 0;
+          s.waitingForSectionValidation = true;
+          elapsed = 0;
+        } else {
+          sti = next;
+          sLeft = section.steps[sti].dureeMin * 60;
+        }
+      }
+    }
+
+    s.currentStepIdx = sti;
+    s.secondsLeft = sLeft;
+  }
+
   function acceptResume() {
     if (!resumeCandidate) return;
+    applyElapsedTime(resumeCandidate);
     const s = resumeCandidate;
     sections = s.sections;
     currentSectionIdx = s.currentSectionIdx;
@@ -447,7 +483,18 @@
   <div class="resume-overlay">
     <div class="resume-card">
       <p class="resume-title">Reprise en cours ?</p>
-      <p class="resume-sub">Une session de chrono a été trouvée. Voulez-vous reprendre là où vous en étiez ?</p>
+      {#if resumeCandidate}
+        {@const elapsedMin = Math.floor((Date.now() - resumeCandidate.savedAt) / 60000)}
+        <p class="resume-sub">
+          {#if elapsedMin < 1}
+            Session trouvée. Le timer reprend là où il en était.
+          {:else}
+            Absent{elapsedMin >= 60
+              ? ` ${Math.floor(elapsedMin / 60)}h${(elapsedMin % 60).toString().padStart(2, '0')}`
+              : ` ${elapsedMin} min`} — le timer sera avancé en conséquence (arrêt en fin de section).
+          {/if}
+        </p>
+      {/if}
       <div class="resume-actions">
         <button class="btn-primary" onclick={acceptResume}>Reprendre</button>
         <button class="btn-ghost" onclick={rejectResume}>Recommencer</button>
