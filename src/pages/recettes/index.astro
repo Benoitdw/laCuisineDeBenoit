@@ -37,7 +37,6 @@ const serialisees = triees.map(r => ({
       </svg>
     </div>
     <div class="hero-inner">
-      <div class="hero-rule"></div>
       <h1>Recettes</h1>
       <p class="hero-intro">
         Bienvenue dans ma cuisine, ici on y trouve des recettes simples, de saison, testées et parfois à améliorer. Pas de rigidité dans les recettes la plupart des ingrédients sont interchangeable
@@ -60,7 +59,7 @@ const serialisees = triees.map(r => ({
 <style>
   .hero {
     background: var(--forest);
-    padding: 4rem 2rem 3.5rem;
+    padding: 1.75rem 2rem 1.5rem;
     position: relative;
     overflow: hidden;
     border-bottom: 3px solid var(--copper);
@@ -79,21 +78,20 @@ const serialisees = triees.map(r => ({
     position: relative;
     z-index: 1;
   }
-  .hero-rule { width: 40px; height: 2px; background: var(--copper); margin-bottom: 1.1rem; }
   h1 {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 5vw, 3rem);
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
     font-weight: 700;
     color: var(--paper);
     line-height: 1.12;
-    margin-bottom: .9rem;
+    margin: 0 0 .4rem;
   }
   .hero-intro {
     font-style: italic;
-    color: rgba(245,237,216,.6);
-    font-size: 1rem;
+    color: rgba(245,237,216,.55);
+    font-size: .88rem;
     max-width: 500px;
-    line-height: 1.7;
+    line-height: 1.65;
   }
 
   .content {

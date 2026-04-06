@@ -2,6 +2,7 @@
   import { presets, type ChronoSection } from '../data/chronoPresets.ts';
   import ChronoTimeline from './ChronoTimeline.svelte';
   import QRCode from 'qrcode';
+  import { deflateSync, inflateSync, strToU8, strFromU8 } from 'fflate';
 
   // ── Types ──────────────────────────────────────────────────────────────────
   type Phase = 'config' | 'active' | 'done';
@@ -37,8 +38,8 @@
     sections: Array<{ id: string; name: string; steps: Array<{ name: string; dureeMin: number }> }>;
   }
 
-  function encodeProtocol(label: string, secs: ChronoSection[]): string {
-    const payload: SharePayload = {
+  function buildPayload(label: string, secs: ChronoSection[]): SharePayload {
+    return {
       label,
       sections: secs.map(s => ({
         id: s.id,
@@ -46,17 +47,39 @@
         steps: s.steps.map(st => ({ name: st.name, dureeMin: st.dureeMin })),
       })),
     };
-    const json = JSON.stringify(payload);
-    // btoa with unicode support, URL-safe base64
+  }
+
+  // v1 — liens texte, rétrocompat
+  function encodeProtocol(label: string, secs: ChronoSection[]): string {
+    const json = JSON.stringify(buildPayload(label, secs));
     const b64 = btoa(unescape(encodeURIComponent(json)));
     return b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
   }
 
+  // v2 — QR codes uniquement (deflate + base64url, préfixe "z.")
+  function encodeQRPayload(label: string, secs: ChronoSection[]): string {
+    const json = JSON.stringify(buildPayload(label, secs));
+    const compressed = deflateSync(strToU8(json));
+    const b64 = btoa(String.fromCharCode(...compressed));
+    const b64url = b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+    return 'z.' + b64url;
+  }
+
   function decodeProtocol(encoded: string): ChronoSection[] | null {
     try {
-      const b64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
-      const json = decodeURIComponent(escape(atob(b64)));
-      const payload = JSON.parse(json) as SharePayload;
+      let payload: SharePayload;
+      if (encoded.startsWith('z.')) {
+        // v2 compressé
+        const b64 = encoded.slice(2).replace(/-/g, '+').replace(/_/g, '/');
+        const binary = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+        const json = strFromU8(inflateSync(binary));
+        payload = JSON.parse(json) as SharePayload;
+      } else {
+        // v1 rétrocompat
+        const b64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
+        const json = decodeURIComponent(escape(atob(b64)));
+        payload = JSON.parse(json) as SharePayload;
+      }
       return payload.sections.map(s => ({
         id: s.id,
         name: s.name,
@@ -71,9 +94,12 @@
     return p ? decodeProtocol(p) : null;
   }
 
-  function buildShareUrl(): string {
-    const label = presets.find(p => p.id === selectedPresetId)?.label ?? 'Protocole personnalisé';
-    const encoded = encodeProtocol(label, sections);
+  function getLabel(): string {
+    return presets.find(p => p.id === selectedPresetId)?.label ?? 'Protocole personnalisé';
+  }
+
+  function buildShareUrl(qr = false): string {
+    const encoded = qr ? encodeQRPayload(getLabel(), sections) : encodeProtocol(getLabel(), sections);
     const origin = typeof window !== 'undefined' ? window.location.origin : 'https://benoitdw.github.io';
     return `${origin}/laCuisineDeBenoit/pain/chrono/?p=${encoded}`;
   }
@@ -408,8 +434,9 @@
 
   // ── QR Code ───────────────────────────────────────────────────────────────
   async function openQRModal() {
-    shareUrl = buildShareUrl();
-    qrDataUrl = await QRCode.toDataURL(shareUrl, {
+    const qrUrl = buildShareUrl(true);   // v2 compressé pour le QR
+    shareUrl = buildShareUrl(false);     // v1 pour le lien texte à copier
+    qrDataUrl = await QRCode.toDataURL(qrUrl, {
       width: 280,
       margin: 2,
       color: { dark: '#1C160E', light: '#F5EDD8' },

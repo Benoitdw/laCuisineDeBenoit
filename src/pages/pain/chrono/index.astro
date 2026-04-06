@@ -20,7 +20,6 @@ import ChronoPain from '../../../components/ChronoPain.svelte';
       </svg>
     </div>
     <div class="hero-inner">
-      <div class="hero-rule"></div>
       <h1>Levainier</h1>
       <p class="hero-intro">
         Configurez votre protocole, démarrez le minuteur, et suivez chaque étape de la fournée.
@@ -40,7 +39,7 @@ import ChronoPain from '../../../components/ChronoPain.svelte';
 <style>
   .chrono-hero {
     background: var(--forest);
-    padding: 3rem 2rem 2.5rem;
+    padding: 1.75rem 2rem 1.5rem;
     border-bottom: 3px solid var(--copper);
     position: relative;
     overflow: hidden;
@@ -51,7 +50,7 @@ import ChronoPain from '../../../components/ChronoPain.svelte';
     right: 3rem;
     top: 50%;
     transform: translateY(-50%);
-    opacity: .07;
+    opacity: .08;
     pointer-events: none;
     color: var(--paper);
   }
@@ -63,44 +62,38 @@ import ChronoPain from '../../../components/ChronoPain.svelte';
     z-index: 1;
   }
 
-  .hero-rule {
-    width: 40px;
-    height: 2px;
-    background: var(--copper);
-    margin-bottom: 1rem;
-  }
-
   h1 {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
     font-weight: 700;
     color: var(--paper);
-    margin-bottom: .7rem;
+    margin: 0 0 .4rem;
   }
 
   .hero-intro {
     font-style: italic;
-    color: rgba(245,237,216,.6);
-    font-size: .95rem;
+    color: rgba(245,237,216,.55);
+    font-size: .88rem;
     max-width: 480px;
-    line-height: 1.7;
-    margin-bottom: 1rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .hero-links {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: .7rem;
   }
 
   .hero-back {
     font-family: 'Lora', serif;
-    font-size: .8rem;
-    color: rgba(245,237,216,.5);
+    font-size: .78rem;
+    color: rgba(245,237,216,.45);
     text-decoration: none;
     letter-spacing: .04em;
     transition: color .15s;
   }
   .hero-back:hover { color: var(--copper-lt); }
-
-  .hero-links {
-    display: flex;
-    gap: 1.5rem;
-  }
 
   .content {
     max-width: 820px;

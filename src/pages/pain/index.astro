@@ -28,7 +28,6 @@ const serialises = tries.map(p => ({
       </svg>
     </div>
     <div class="pain-hero-inner">
-      <div class="hero-rule"></div>
       <h1>Journal Pain</h1>
       <p class="pain-intro">
         Chaque entrée consigne les paramètres d'une fournée : farines, hydratation, sel, levure — et une note honnête.
@@ -80,7 +79,7 @@ const serialises = tries.map(p => ({
 <style>
   .pain-hero {
     background: var(--forest);
-    padding: 3rem 2rem 2.5rem;
+    padding: 1.75rem 2rem 1.5rem;
     border-bottom: 3px solid var(--copper);
     position: relative;
     overflow: hidden;
@@ -90,7 +89,7 @@ const serialises = tries.map(p => ({
     right: 3rem;
     top: 50%;
     transform: translateY(-50%);
-    opacity: .07;
+    opacity: .08;
     pointer-events: none;
     color: var(--paper);
   }
@@ -100,20 +99,19 @@ const serialises = tries.map(p => ({
     position: relative;
     z-index: 1;
   }
-  .hero-rule { width: 40px; height: 2px; background: var(--copper); margin-bottom: 1rem; }
   h1 {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
     font-weight: 700;
     color: var(--paper);
-    margin-bottom: .7rem;
+    margin: 0 0 .4rem;
   }
   .pain-intro {
     font-style: italic;
-    color: rgba(245,237,216,.6);
-    font-size: .95rem;
+    color: rgba(245,237,216,.55);
+    font-size: .88rem;
     max-width: 480px;
-    line-height: 1.7;
+    line-height: 1.6;
   }
   .content {
     max-width: 960px;
