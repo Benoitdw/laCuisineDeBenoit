@@ -95,7 +95,7 @@
   }
 
   function getLabel(): string {
-    return presets.find(p => p.id === selectedPresetId)?.label ?? 'Protocole personnalisé';
+    return presets.find(p => p.id === selectedPresetId)?.label ?? 'Process personnalisé';
   }
 
   function buildShareUrl(qr = false): string {
@@ -489,10 +489,10 @@
     <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
     <div class="qr-modal" onclick={(e) => e.stopPropagation()}>
       <button class="close" onclick={() => showQRModal = false} aria-label="Fermer">×</button>
-      <h3 class="qr-title">Partager ce protocole</h3>
+      <h3 class="qr-title">Partager ce process</h3>
       <p class="qr-sub">Scannez ce QR code avec l'app Levainier, ou copiez le lien.</p>
       {#if qrDataUrl}
-        <img class="qr-img" src={qrDataUrl} alt="QR code du protocole" />
+        <img class="qr-img" src={qrDataUrl} alt="QR code du process" />
       {/if}
       <div class="qr-url-row">
         <span class="qr-url">{shareUrl}</span>
@@ -500,7 +500,7 @@
           {copyDone ? '✓ Copié' : 'Copier'}
         </button>
       </div>
-      <p class="qr-hint">L'app Android décode ce lien et charge le protocole automatiquement.</p>
+      <p class="qr-hint">L'app Android décode ce lien et charge le process automatiquement.</p>
     </div>
   </div>
 {/if}
@@ -536,7 +536,7 @@
 
     <!-- Sélecteur preset -->
     <div class="preset-row">
-      <label class="field-label" for="preset-select">Protocole</label>
+      <label class="field-label" for="preset-select">process</label>
       <select id="preset-select" class="select" value={selectedPresetId} onchange={onPresetChange}>
         {#each presets as p}
           <option value={p.id}>{p.label}</option>
@@ -626,7 +626,7 @@
       </button>
 
       <div class="propose-wrap">
-        <button class="btn-qr" onclick={openQRModal} title="Générer un QR Code pour partager ce protocole">
+        <button class="btn-qr" onclick={openQRModal} title="Générer un QR Code pour partager ce process">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <rect x="1" y="1" width="5" height="5" rx=".5"/><rect x="2" y="2" width="3" height="3"/>
             <rect x="10" y="1" width="5" height="5" rx=".5"/><rect x="11" y="2" width="3" height="3"/>
@@ -664,7 +664,7 @@
               <line x1="5" y1="5.5" x2="5" y2="10.5"/>
               <path d="M11 5.5 Q11 9 7.5 10 L5 10.5"/>
             </svg>
-            Proposer ce protocole
+            Proposer ce process
           </button>
         {/if}
       </div>
@@ -768,7 +768,7 @@
       </button>
 
       <div class="controls-right">
-        <button class="btn-qr" onclick={openQRModal} title="Générer un QR Code pour partager ce protocole">
+        <button class="btn-qr" onclick={openQRModal} title="Générer un QR Code pour partager ce process">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <rect x="1" y="1" width="5" height="5" rx=".5"/><rect x="2" y="2" width="3" height="3"/>
             <rect x="10" y="1" width="5" height="5" rx=".5"/><rect x="11" y="2" width="3" height="3"/>
@@ -802,7 +802,7 @@
               <line x1="5" y1="5.5" x2="5" y2="10.5"/>
               <path d="M11 5.5 Q11 9 7.5 10 L5 10.5"/>
             </svg>
-            Proposer ce protocole
+            Proposer ce process
           </button>
         {/if}
         <button class="btn-control btn-reset" onclick={resetTimer}>↺ Reset</button>

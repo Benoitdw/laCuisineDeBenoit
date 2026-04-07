@@ -36,13 +36,13 @@ const serialises = tries.map(p => ({
   </div>
 
   <div class="content">
-    <details class="protocole">
+    <details class="process">
       <summary>
-        <span class="protocole-titre">Protocole de base</span>
-        <span class="protocole-hint">Autolyse · Pointage · Façonnage · Cuisson </span>
+        <span class="process-titre">Process de base</span>
+        <span class="process-hint">Autolyse · Pointage · Façonnage · Cuisson </span>
       </summary>
-      <div class="protocole-body">
-        <div class="protocole-item protocole-chrono">
+      <div class="process-body">
+        <div class="process-item process-chrono">
           <a href="chrono/" class="chrono-cta">
             <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width=".9" aria-hidden="true">
               <circle cx="8" cy="8" r="5.5"/>
@@ -53,19 +53,19 @@ const serialises = tries.map(p => ({
           </a>
           <p class="chrono-desc">Minuteur pas à pas pour guider chaque étape de la fournée.</p>
         </div>
-        <div class="protocole-item">
+        <div class="process-item">
           <h3>Autolyse</h3>
           <p>Mélanger farine + eau, repos 30–60 min avant d'ajouter levain/levure et sel. Facilite le développement du gluten.</p>
         </div>
-        <div class="protocole-item">
+        <div class="process-item">
           <h3>Pointage &amp; rabats</h3>
           <p>1h30–2h30 h à 24 °C avec 2 séries de rabats.Tu pe La pâte doit doubler.</p>
         </div>
-        <div class="protocole-item">
+        <div class="process-item">
           <h3>Façonnage &amp; apprêt</h3>
           <p>Façonner en boule ou bâtard. Apprêt 1 h à TA ou une nuit au frigo (4 °C) pour plus de saveur.</p>
         </div>
-        <div class="protocole-item">
+        <div class="process-item">
           <h3>Cuisson</h3>
           <p>Four à 250 °C avec cocotte préchauffée. 20 min couvert, 20–25 min découvert jusqu'à croûte dorée foncée.</p>
         </div>
@@ -119,15 +119,15 @@ const serialises = tries.map(p => ({
     padding: 2rem 2rem 4rem;
   }
 
-  /* Protocole de base */
-  .protocole {
+  /* process de base */
+  .process {
     border-left: 3px solid var(--copper);
     background: rgba(184,115,51,.04);
     border-radius: 0 3px 3px 0;
     margin-bottom: 2.5rem;
   }
 
-  .protocole summary {
+  .process summary {
     cursor: pointer;
     padding: .9rem 1.25rem;
     display: flex;
@@ -136,20 +136,20 @@ const serialises = tries.map(p => ({
     list-style: none;
     user-select: none;
   }
-  .protocole summary::-webkit-details-marker { display: none; }
+  .process summary::-webkit-details-marker { display: none; }
 
-  .protocole[open] summary {
+  .process[open] summary {
     border-bottom: 1px solid rgba(184,115,51,.2);
   }
 
-  .protocole-titre {
+  .process-titre {
     font-family: 'Playfair Display', serif;
     font-size: 1.05rem;
     font-weight: 700;
     color: var(--forest);
   }
 
-  .protocole-hint {
+  .process-hint {
     font-size: .78rem;
     letter-spacing: .08em;
     text-transform: uppercase;
@@ -157,14 +157,14 @@ const serialises = tries.map(p => ({
     font-family: 'Lora', serif;
   }
 
-  .protocole-body {
+  .process-body {
     padding: 1rem 1.25rem 1.25rem;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 1rem 1.5rem;
   }
 
-  .protocole-chrono {
+  .process-chrono {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -193,7 +193,7 @@ const serialises = tries.map(p => ({
     font-style: italic;
   }
 
-  .protocole-item h3 {
+  .process-item h3 {
     font-family: 'Playfair Display', serif;
     font-size: .85rem;
     font-weight: 700;
@@ -202,7 +202,7 @@ const serialises = tries.map(p => ({
     letter-spacing: .03em;
   }
 
-  .protocole-item p {
+  .process-item p {
     font-family: 'Lora', serif;
     font-size: .85rem;
     line-height: 1.6;
