@@ -32,6 +32,9 @@ const serialises = tries.map(p => ({
       <p class="pain-intro">
         Chaque entrée consigne les paramètres d'une fournée : farines, hydratation, sel, levure — et une note honnête.
       </p>
+      <div class="hero-links">
+        <a href="nouveau/" class="hero-link-new">+ Nouvelle fournée</a>
+      </div>
     </div>
   </div>
 
@@ -113,6 +116,16 @@ const serialises = tries.map(p => ({
     max-width: 480px;
     line-height: 1.6;
   }
+  .hero-links { margin-top: .7rem; }
+  .hero-link-new {
+    font-family: 'Lora', serif;
+    font-size: .78rem;
+    color: rgba(245,237,216,.45);
+    text-decoration: none;
+    letter-spacing: .04em;
+    transition: color .15s;
+  }
+  .hero-link-new:hover { color: var(--copper-lt); }
   .content {
     max-width: 960px;
     margin: 0 auto;
