@@ -1,0 +1,50 @@
+{
+  "id": "baguette-levure",
+  "label": "Baguette à la levure",
+  "sections": [
+    {
+      "id": "petrissage",
+      "name": "Pétrissage",
+      "steps": [
+        {
+          "name": "Autolyse (farine + eau)",
+          "dureeMin": 45
+        },
+        {
+          "name": "Pétrissage (sel + levure)",
+          "dureeMin": 10
+        }
+      ]
+    },
+    {
+      "id": "pointage",
+      "name": "Pointage",
+      "steps": [
+        {
+          "name": "Détendre",
+          "dureeMin": 30
+        }
+      ]
+    },
+    {
+      "id": "appret",
+      "name": "Apprêt",
+      "steps": [
+        {
+          "name": "Façonnage + apprêt",
+          "dureeMin": 120
+        }
+      ]
+    },
+    {
+      "id": "cuisson",
+      "name": "Cuisson",
+      "steps": [
+        {
+          "name": "A découvert avec bol d'eau",
+          "dureeMin": 25
+        }
+      ]
+    }
+  ]
+}
