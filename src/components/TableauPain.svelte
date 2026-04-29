@@ -13,8 +13,10 @@
       sel_g: number;
       levure: string;
       levure_g?: number;
-      levain_eau_g?: number;
-      levain_farine_g?: number;
+      levain_mere_g?: number;
+      levain_mere_hydration?: number;
+      levain_rafraichi_eau_g?: number;
+      levain_rafraichi_farine_g?: number;
       autres?: string;
       poids_g?: number;
       note: number;
@@ -29,6 +31,17 @@
 
   function farineTotal(d: typeof pains[0]['data']) {
     return d.farine_g + (d.farines_secondaires?.reduce((s, f) => s + f.g, 0) ?? 0);
+  }
+
+  function levainComp(d: typeof pains[0]['data']) {
+    const mere = d.levain_mere_g ?? 0;
+    const hydration = d.levain_mere_hydration ?? 0;
+    const mereFarine = mere > 0 && hydration > 0 ? mere / (1 + hydration / 100) : 0;
+    return {
+      eau: (mere - mereFarine) + (d.levain_rafraichi_eau_g ?? 0),
+      farine: mereFarine + (d.levain_rafraichi_farine_g ?? 0),
+      total: mere + (d.levain_rafraichi_eau_g ?? 0) + (d.levain_rafraichi_farine_g ?? 0),
+    };
   }
 
   $: if (selected) {
@@ -97,7 +110,7 @@
             <td class="titre">{p.data.titre || '—'}</td>
             <td>{p.data.farine_principale}</td>
             <td>{p.data.farines_secondaires?.map(f => f.type).join(', ') || '—'}</td>
-            <td class="num">{pct(p.data.eau_g + (p.data.levain_eau_g ?? 0), farineTotal(p.data) + (p.data.levain_farine_g ?? 0))} %</td>
+            <td class="num">{pct(p.data.eau_g + levainComp(p.data).eau, farineTotal(p.data) + levainComp(p.data).farine)} %</td>
             <td class="num">{pct(p.data.sel_g, p.data.farine_g)} %</td>
             <td>{p.data.levure}</td>
             <td class="autres">{p.data.autres || '—'}</td>
@@ -167,27 +180,24 @@
             <td class="num">{Math.round(selected.data.sel_g * facteur)} g</td>
             <td class="num">{pct(selected.data.sel_g, farineTotal(selected.data))} %</td>
           </tr>
-          {#if selected.data.levure_g !== undefined}
+          {#if selected.data.levure === 'levain' && selected.data.levain_mere_g !== undefined}
+            {@const lc = levainComp(selected.data)}
             <tr>
               <td>
-                {#if selected.data.levure === 'levain' && selected.data.levain_eau_g !== undefined && selected.data.levain_farine_g !== undefined}
-                  levain ({(selected.data.levain_eau_g / selected.data.levain_farine_g * 100).toFixed(0)} %)
-                {:else}
-                  Levure ({selected.data.levure})
-                {/if}
+                levain mère {selected.data.levain_mere_g} g à {selected.data.levain_mere_hydration ?? '?'} %{selected.data.levain_rafraichi_eau_g ? ` + rafraîchi` : ''}
               </td>
+              <td class="num">{Math.round(lc.total * facteur)} g</td>
+              <td class="num">{pct(lc.total, farineTotal(selected.data))} %</td>
+            </tr>
+          {:else if selected.data.levure_g !== undefined}
+            <tr>
+              <td>Levure ({selected.data.levure})</td>
               <td class="num">{Math.round(selected.data.levure_g * facteur)} g</td>
               <td class="num">{pct(selected.data.levure_g, farineTotal(selected.data))} %</td>
             </tr>
           {:else}
             <tr>
-              <td>
-                {#if selected.data.levure === 'levain' && selected.data.levain_eau_g !== undefined && selected.data.levain_farine_g !== undefined}
-                  levain ({(selected.data.levain_eau_g / selected.data.levain_farine_g * 100).toFixed(0)} %)
-                {:else}
-                  Levure ({selected.data.levure})
-                {/if}
-              </td>
+              <td>Levure ({selected.data.levure})</td>
               <td class="num">—</td>
               <td class="num">—</td>
             </tr>
