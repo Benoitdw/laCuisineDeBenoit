@@ -1,24 +1,26 @@
 <script lang="ts">
-  export let portionsBase: number = 4;
-  export let ingredients: Array<{
-    nom: string;
-    quantite?: number;
-    unite?: string;
-    note?: string;
-    interchangeable?: boolean;
-  }> = [];
+  const { portionsBase = 4, ingredients = [] }: {
+    portionsBase?: number;
+    ingredients?: Array<{
+      nom: string;
+      quantite?: number;
+      unite?: string;
+      note?: string;
+      interchangeable?: boolean;
+    }>;
+  } = $props();
 
-  let portions = portionsBase;
-  $: facteur = portions / portionsBase;
-  $: indispensables = ingredients.filter(i => !i.interchangeable);
-  $: interchangeables = ingredients.filter(i => i.interchangeable);
+  let portions = $state(portionsBase);
+  const facteur = $derived(portions / portionsBase);
+  const indispensables = $derived(ingredients.filter(i => !i.interchangeable));
+  const interchangeables = $derived(ingredients.filter(i => i.interchangeable));
 
   function hasQty(q?: number): boolean {
     return q !== undefined && q !== null && q !== 0;
   }
 
-  function fmt(q: number, unite?: string): string {
-    const v = q * facteur;
+  function fmt(q: number, f: number, unite?: string): string {
+    const v = q * f;
     if (Number.isInteger(q) && !unite) return String(Math.round(v));
     const r = parseFloat(v.toFixed(1));
     return Number.isInteger(r) ? String(r) : String(r);
@@ -26,9 +28,9 @@
 </script>
 
 <div class="portions">
-  <button class="p-btn" on:click={() => portions = Math.max(1, portions - 1)} aria-label="Moins">−</button>
+  <button class="p-btn" onclick={() => portions = Math.max(1, portions - 1)} aria-label="Moins">−</button>
   <span class="p-count">{portions}</span>
-  <button class="p-btn" on:click={() => portions = Math.min(20, portions + 1)} aria-label="Plus">+</button>
+  <button class="p-btn" onclick={() => portions = Math.min(20, portions + 1)} aria-label="Plus">+</button>
   <span class="p-label">portions</span>
   {#if portions !== portionsBase}
     <span class="p-base">(base {portionsBase})</span>
@@ -43,7 +45,7 @@
   {#each indispensables as ing}
     <li class:no-qty={!hasQty(ing.quantite)}>
       {#if hasQty(ing.quantite)}
-        <span class="ing-qty">{fmt(ing.quantite!, ing.unite)}</span>
+        <span class="ing-qty">{fmt(ing.quantite!, facteur, ing.unite)}</span>
         <span class="ing-unit">{ing.unite ?? ''}</span>
       {/if}
       <span class="ing-name">{ing.nom}</span>
@@ -59,7 +61,7 @@
   <ul class="ing-list interchangeables">
     {#each interchangeables as ing}
       <li>
-        <span class="ing-qty">{hasQty(ing.quantite) ? fmt(ing.quantite!, ing.unite) : ''}</span>
+        <span class="ing-qty">{hasQty(ing.quantite) ? fmt(ing.quantite!, facteur, ing.unite) : ''}</span>
         <span class="ing-unit">{ing.unite ?? ''}</span>
         <span class="ing-name"><span class="swap-icon" aria-hidden="true">⇄</span>{ing.nom}</span>
         {#if ing.note}<span class="ing-note">{ing.note}</span>{/if}
