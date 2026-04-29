@@ -32,6 +32,8 @@
   let levure            = $state('levain');
   let levure_custom     = $state('');
   let levure_g          = $state('');
+  let levain_eau_g      = $state('');
+  let levain_farine_g   = $state('');
   let autres            = $state('');
   let poids_g           = $state('');
   let preset_id         = $state('');
@@ -47,8 +49,13 @@
     farines_sec.reduce((s, f) => s + (parseFloat(f.g) || 0), 0)
   );
 
+  const levainEauG    = $derived(levure === 'levain' ? (parseFloat(levain_eau_g) || 0) : 0);
+  const levainFarineG = $derived(levure === 'levain' ? (parseFloat(levain_farine_g) || 0) : 0);
+
   const hydratation = $derived(
-    farineTotal > 0 ? ((parseFloat(eau_g) || 0) / farineTotal * 100).toFixed(1) : null
+    (farineTotal + levainFarineG) > 0
+      ? (((parseFloat(eau_g) || 0) + levainEauG) / (farineTotal + levainFarineG) * 100).toFixed(1)
+      : null
   );
 
   const facteurReel = $derived(() => {
@@ -95,6 +102,12 @@
     lines.push(`levure: "${escapeYaml(levureLabel)}"`);
     if (levure_g && parseFloat(levure_g) > 0) {
       lines.push(`levure_g: ${parseFloat(levure_g)}`);
+    }
+    if (levure === 'levain' && levain_eau_g && parseFloat(levain_eau_g) > 0) {
+      lines.push(`levain_eau_g: ${parseFloat(levain_eau_g)}`);
+    }
+    if (levure === 'levain' && levain_farine_g && parseFloat(levain_farine_g) > 0) {
+      lines.push(`levain_farine_g: ${parseFloat(levain_farine_g)}`);
     }
     if (poids_g && parseFloat(poids_g) > 0) {
       lines.push(`poids_g: ${parseFloat(poids_g)}`);
@@ -334,6 +347,38 @@
           placeholder="100"
         />
       </div>
+      {#if levure === 'levain'}
+        <div class="field">
+          <label class="field-label">Composition du levain <span class="optional">(pour hydratation réelle)</span></label>
+          <div class="row-2">
+            <div class="field">
+              <label class="field-label field-label--sub" for="f-levain-eau">Eau (g)</label>
+              <input
+                id="f-levain-eau"
+                class="field-input"
+                type="number" min="0"
+                value={levain_eau_g}
+                oninput={(e) => { levain_eau_g = (e.target as HTMLInputElement).value; }}
+                placeholder="60"
+              />
+            </div>
+            <div class="field">
+              <label class="field-label field-label--sub" for="f-levain-farine">Farine (g)</label>
+              <input
+                id="f-levain-farine"
+                class="field-input"
+                type="number" min="0"
+                value={levain_farine_g}
+                oninput={(e) => { levain_farine_g = (e.target as HTMLInputElement).value; }}
+                placeholder="100"
+              />
+            </div>
+          </div>
+          {#if levainEauG > 0 && levainFarineG > 0}
+            <span class="field-hint">Levain à {(levainEauG / levainFarineG * 100).toFixed(0)} % d'hydratation</span>
+          {/if}
+        </div>
+      {/if}
     </div>
   </div>
 
@@ -578,6 +623,12 @@
     font-size: .72rem;
     color: var(--muted);
     font-style: italic;
+  }
+
+  .field-label--sub {
+    font-size: .72rem;
+    font-weight: 500;
+    color: var(--muted);
   }
 
   .field-input {

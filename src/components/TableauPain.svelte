@@ -13,6 +13,8 @@
       sel_g: number;
       levure: string;
       levure_g?: number;
+      levain_eau_g?: number;
+      levain_farine_g?: number;
       autres?: string;
       poids_g?: number;
       note: number;
@@ -95,7 +97,7 @@
             <td class="titre">{p.data.titre || '—'}</td>
             <td>{p.data.farine_principale}</td>
             <td>{p.data.farines_secondaires?.map(f => f.type).join(', ') || '—'}</td>
-            <td class="num">{pct(p.data.eau_g, farineTotal(p.data))} %</td>
+            <td class="num">{pct(p.data.eau_g + (p.data.levain_eau_g ?? 0), farineTotal(p.data) + (p.data.levain_farine_g ?? 0))} %</td>
             <td class="num">{pct(p.data.sel_g, p.data.farine_g)} %</td>
             <td>{p.data.levure}</td>
             <td class="autres">{p.data.autres || '—'}</td>
@@ -167,13 +169,25 @@
           </tr>
           {#if selected.data.levure_g !== undefined}
             <tr>
-              <td>Levure ({selected.data.levure})</td>
+              <td>
+                {#if selected.data.levure === 'levain' && selected.data.levain_eau_g !== undefined && selected.data.levain_farine_g !== undefined}
+                  levain ({(selected.data.levain_eau_g / selected.data.levain_farine_g * 100).toFixed(0)} %)
+                {:else}
+                  Levure ({selected.data.levure})
+                {/if}
+              </td>
               <td class="num">{Math.round(selected.data.levure_g * facteur)} g</td>
               <td class="num">{pct(selected.data.levure_g, farineTotal(selected.data))} %</td>
             </tr>
           {:else}
             <tr>
-              <td>Levure ({selected.data.levure})</td>
+              <td>
+                {#if selected.data.levure === 'levain' && selected.data.levain_eau_g !== undefined && selected.data.levain_farine_g !== undefined}
+                  levain ({(selected.data.levain_eau_g / selected.data.levain_farine_g * 100).toFixed(0)} %)
+                {:else}
+                  Levure ({selected.data.levure})
+                {/if}
+              </td>
               <td class="num">—</td>
               <td class="num">—</td>
             </tr>

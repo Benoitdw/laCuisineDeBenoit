@@ -50,6 +50,8 @@ const pain = defineCollection({
     sel_g: z.number(),
     levure: z.string(),
     levure_g: z.number().optional(),
+    levain_eau_g: z.number().optional(),
+    levain_farine_g: z.number().optional(),
     autres: z.string().optional(),
     poids_g: z.number().optional(),
     note: z.number().min(1).max(5),
