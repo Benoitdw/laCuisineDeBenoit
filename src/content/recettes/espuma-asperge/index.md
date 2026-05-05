@@ -47,7 +47,7 @@ astuces:
   - "Pour une présentation originale, vous pouvez servir l’espuma d’asperges dans des verrines avec des petits morceaux de jambon cru ou de saumon fumé sur le dessus. Vous pouvez également accompagner cette recette d’une salade de roquette ou de jeunes pousses pour un contraste de saveurs et de textures."
 inspirations:
   - url: "https://lacuisinedemamere.fr/recette-espuma-d-asperges-vertes/"
-    label: "Source"
+    label: "D'ici ! "
 ---
 
 ## Avis
